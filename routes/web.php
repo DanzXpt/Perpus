@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AkunController;
+use App\Http\Middleware\is_petugas_and_kepala;
 use App\Http\Middleware\isAnggota;
 use App\Http\Middleware\isKepala;
 use App\Http\Middleware\isPetugas;
@@ -109,6 +110,21 @@ Route::middleware(['auth'])->group(function () {
 
 
     /*
+|--------------------------------------------------------------------------
+| CRUD BUKU
+|--------------------------------------------------------------------------
+*/
+    Route::resource('buku', BukuController::class)->names([
+        'index' => 'petugas.buku.index',
+        'create' => 'petugas.buku.create',
+        'store' => 'petugas.buku.store',
+        'edit' => 'petugas.buku.edit',
+        'update' => 'petugas.buku.update',
+        'destroy' => 'petugas.buku.destroy',
+    ])->parameters(['buku' => 'id'])->middleware(is_petugas_and_kepala::class);
+
+
+    /*
     |--------------------------------------------------------------------------
     | ROLE PETUGAS
     |--------------------------------------------------------------------------
@@ -134,20 +150,6 @@ Route::middleware(['auth'])->group(function () {
             'update' => 'petugas.kategori.update',
             'destroy' => 'petugas.kategori.destroy',
         ])->parameters(['kategori' => 'id']);
-
-        /*
-        |--------------------------------------------------------------------------
-        | CRUD BUKU
-        |--------------------------------------------------------------------------
-        */
-        Route::resource('buku', BukuController::class)->names([
-            'index' => 'petugas.buku.index',
-            'create' => 'petugas.buku.create',
-            'store' => 'petugas.buku.store',
-            'edit' => 'petugas.buku.edit',
-            'update' => 'petugas.buku.update',
-            'destroy' => 'petugas.buku.destroy',
-        ])->parameters(['buku' => 'id']);
 
         /*
         |--------------------------------------------------------------------------

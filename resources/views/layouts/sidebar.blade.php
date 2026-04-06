@@ -1,10 +1,12 @@
 <div class="fixed left-0 top-0 h-full w-64 bg-slate-900 flex flex-col p-6 z-50 shadow-2xl">
     {{-- LOGO SECTION --}}
     <div class="flex items-center gap-3 px-2 mb-10">
-        <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
+        <div
+            class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
             <i class="fa-solid fa-book-bookmark text-xl"></i>
         </div>
-        <span class="font-black text-white text-xl tracking-tight uppercase italic">PERPUS<span class="text-indigo-500">ID</span></span>
+        <span class="font-black text-white text-xl tracking-tight uppercase italic">PERPUS<span
+                class="text-indigo-500">ID</span></span>
     </div>
 
     <div class="flex-1 space-y-2 overflow-y-auto">
@@ -33,6 +35,11 @@
                 class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('kepala.akun.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                 <i class="fa-solid fa-users text-lg"></i>
                 <span class="font-black text-sm uppercase tracking-wide">Daftar User</span>
+            </a>
+            <a href="{{ route('petugas.buku.index') }}"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('petugas.buku.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                <i class="fa-solid fa-box text-lg"></i>
+                <span class="font-black text-sm uppercase tracking-wide">Kelola Buku</span>
             </a>
             <a href="{{ route('kepala.transaksi.index') }}"
                 class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('kepala.transaksi.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
