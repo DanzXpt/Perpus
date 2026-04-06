@@ -15,9 +15,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', // admin, petugas, anggota
-        'telepon',
-        'alamat',
+        'role',
+        'nis',      // Tambahkan ini
+        'kelas',    // Tambahkan ini
+        'alamat',   // Tambahkan ini
+        'nip',      // Tambahkan ini
+        'no_hp',    // Tambahkan ini
     ];
 
     protected $hidden = [
@@ -35,36 +38,22 @@ class User extends Authenticatable
     // HELPER FUNCTIONS (Biar cek role di Controller/Blade simpel)
     // ============================================================
 
-    public function isKepala()
-    {
-        return $this->role === 'admin'; // atau 'kepala', sesuaikan DB
-    }
-
-    public function isPetugas()
-    {
-        return $this->role === 'petugas';
-    }
-
-    public function isAnggota()
-    {
-        return $this->role === 'anggota';
-    }
 
     // ============================================================
     // RELASI PROFIL (TEKNIK TERPISAH)
     // ============================================================
 
-    public function profilAnggota()
+    public function anggota()
     {
         return $this->hasOne(Anggota::class, 'user_id');
     }
 
-    public function profilPetugas()
+    public function petugas()
     {
         return $this->hasOne(Petugas::class, 'user_id');
     }
 
-    public function profilKepala()
+    public function kepala()
     {
         return $this->hasOne(KepalaPerpus::class, 'user_id');
     }

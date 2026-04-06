@@ -10,17 +10,39 @@ use Illuminate\Support\Facades\Storage;
 
 class BukuController extends Controller
 {
-    // Menampilkan Tabel Kelola Buku
-    public function index()
+
+    public function index(Request $request)
     {
-        $buku = Buku::with('kategori')->latest()->get();
-        return view('petugas.buku.index', compact('buku'));
+        $kategori = \App\Models\Kategori::all();
+        $query = \App\Models\Buku::with('kategori');
+
+        // 1. Filter Kategori (Jalankan duluan)
+        if ($request->filled('kategori')) {
+            $query->where('kategori_id', $request->kategori);
+        }
+
+        // 2. Filter Search (Bungkus dalam function biar gak ngerusak kategori)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('judul', 'like', "%$search%")
+                    ->orWhere('penulis', 'like', "%$search%");
+            });
+        }
+
+        $buku = $query->latest()->paginate(10);
+
+        if (auth()->user()->role == 'anggota') {
+            return view('anggota.buku', compact('buku', 'kategori'));
+        }
+        return view('petugas.buku.index', compact('buku', 'kategori'));
     }
 
-    // Menuju Halaman Tambah Buku
+
+
     public function create()
     {
-        $kategori = Kategori::all();
+        $kategori = \App\Models\Kategori::all();
         return view('petugas.buku.tambahbuku', compact('kategori'));
     }
 

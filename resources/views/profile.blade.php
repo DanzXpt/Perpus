@@ -1,150 +1,162 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 pb-20">
-    
-    <div class="flex items-center justify-between py-6 border-b border-dashed border-gray-200 mb-8">
-        <div>
-            <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Profil Saya</h2>
-            <p class="text-sm text-gray-500 mt-1">Kelola informasi akun Anda</p>
+    <div class="p-8 bg-slate-50 min-h-screen">
+        {{-- Header --}}
+        <div class="mb-8 flex justify-between items-end">
+            <div>
+                <h1 class="text-3xl font-black text-slate-800 tracking-tighter uppercase italic">Profil Saya</h1>
+                <p class="text-slate-500 text-sm font-medium mt-1">Kelola informasi akun dan keamanan Anda</p>
+            </div>
+            <div class="text-right hidden md:block">
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Terakhir Login</span>
+                <span class="text-sm font-bold text-slate-700">{{ now()->format('d M Y, H:i') }}</span>
+            </div>
         </div>
-        <div class="flex items-center gap-4">
-            <p class="text-sm text-gray-500 font-medium">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}</p>
-            <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white text-lg font-black shadow-lg">
-                {{ substr($user->name, 0, 1) }}
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            {{-- Sidebar Profil (Info Ringkas) --}}
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-8 text-center">
+                    <div class="relative inline-block mb-6">
+                        <div
+                            class="w-32 h-32 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-full flex items-center justify-center text-white font-black text-5xl shadow-2xl shadow-blue-200 border-4 border-white">
+                            {{ substr(Auth::user()->name, 0, 1) }}
+                        </div>
+                        <div
+                            class="absolute bottom-1 right-1 w-8 h-8 bg-emerald-500 border-4 border-white rounded-full shadow-sm">
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-black text-slate-800 tracking-tight">{{ Auth::user()->name }}</h3>
+                    <p class="text-slate-400 font-bold text-sm mb-6">{{ Auth::user()->email }}</p>
+
+                    <div class="flex flex-col gap-2">
+                        <div
+                            class="px-4 py-3 bg-blue-50 text-blue-600 rounded-2xl text-xs font-black uppercase tracking-widest border border-blue-100 flex items-center justify-center gap-2">
+                            <i class="fas fa-user-shield"></i> {{ ucfirst(Auth::user()->role) }}
+                        </div>
+                        <div
+                            class="px-4 py-3 bg-slate-50 text-slate-500 rounded-2xl text-xs font-black uppercase tracking-widest border border-slate-100 flex items-center justify-center gap-2">
+                            <i class="fas fa-calendar-alt"></i> Bergabung:
+                            {{ Auth::user()->created_at ? Auth::user()->created_at->format('M Y') : '-' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Form Utama --}}
+            <div class="lg:col-span-2 space-y-8">
+
+                {{-- Form Informasi Profil --}}
+                <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="p-8 border-b border-slate-50 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <h2 class="font-black text-slate-800 text-lg tracking-tight italic uppercase">Informasi Dasar</h2>
+                    </div>
+
+                    <form action="{{ route('profile.update') }}" method="POST" class="p-8">
+                        @csrf @method('PUT')
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="col-span-2">
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                    <i class="fas fa-user text-[8px]"></i> Nama Lengkap <span class="text-rose-500">*</span>
+                                </label>
+                                <input type="text" name="name" value="{{ Auth::user()->name }}"
+                                    class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
+                            </div>
+
+                            <div>
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                    <i class="fas fa-envelope text-[8px]"></i> Email <span class="text-rose-500">*</span>
+                                </label>
+                                <input type="email" name="email" value="{{ Auth::user()->email }}"
+                                    class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
+                            </div>
+
+                            <div>
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                    <i class="fas fa-phone text-[8px]"></i> Nomor Telepon
+                                </label>
+                                <input type="text" name="no_telp" value="{{ Auth::user()->no_telp }}"
+                                    class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
+                            </div>
+
+                            <div class="col-span-2">
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                    <i class="fas fa-map-marker-alt text-[8px]"></i> Alamat Lengkap
+                                </label>
+                                <textarea name="alamat" rows="3"
+                                    class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">{{ Auth::user()->alamat }}</textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                            class="mt-8 px-8 py-4 bg-blue-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 flex items-center gap-3">
+                            <i class="fas fa-save"></i> Perbarui Profil
+                        </button>
+                    </form>
+                </div>
+
+                {{-- Form Ganti Password --}}
+                <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="p-8 border-b border-slate-50 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h2 class="font-black text-slate-800 text-lg tracking-tight italic uppercase">Keamanan Password</h2>
+                    </div>
+
+                    <form action="{{ route('profile.password') }}" method="POST" class="p-8">
+                        @csrf @method('PUT')
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                            <div class="col-span-2">
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                    <i class="fas fa-unlock text-[8px]"></i> Password Saat Ini <span
+                                        class="text-rose-500">*</span>
+                                </label>
+                                <input type="password" name="current_password"
+                                    class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-amber-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
+                            </div>
+
+                            <div>
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                    <i class="fas fa-key text-[8px]"></i> Password Baru <span class="text-rose-500">*</span>
+                                </label>
+                                <input type="password" name="password" placeholder="Min. 6 karakter"
+                                    class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-amber-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
+                            </div>
+
+                            <div>
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                    <i class="fas fa-redo text-[8px]"></i> Konfirmasi Baru <span
+                                        class="text-rose-500">*</span>
+                                </label>
+                                <input type="password" name="password_confirmation"
+                                    class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-amber-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                            class="mt-8 px-8 py-4 bg-amber-500 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-amber-600 transition-all shadow-lg shadow-amber-100 flex items-center gap-3">
+                            <i class="fas fa-lock"></i> Update Password
+                        </button>
+                    </form>
+                </div>
+
             </div>
         </div>
     </div>
-
-    @if(session('success'))
-    <div class="mb-6 p-4 bg-emerald-100 border border-emerald-200 text-emerald-700 rounded-2xl flex items-center gap-3 font-bold animate-pulse">
-        <i class="fas fa-check-circle text-lg"></i> {{ session('success') }}
-    </div>
-    @endif
-
-    @if($errors->any())
-    <div class="mb-6 p-4 bg-red-100 border border-red-200 text-red-700 rounded-2xl font-bold">
-        <div class="flex items-center gap-3 mb-2">
-            <i class="fas fa-exclamation-circle text-lg"></i> 
-            <span>Terjadi Kesalahan:</span>
-        </div>
-        <ul class="list-disc list-inside text-xs ml-5 font-medium">
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        <div class="lg:col-span-2">
-            <form action="{{ route('profile.update') }}" method="POST" class="bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-slate-100 h-full">
-                @csrf
-                <div class="flex items-center gap-6 mb-10 pb-8 border-b border-gray-100">
-                    <div class="w-24 h-24 rounded-full bg-indigo-600 flex items-center justify-center text-white text-5xl font-black shadow-2xl shadow-indigo-200">
-                        {{ substr($user->name, 0, 1) }}
-                    </div>
-                    <div>
-                        <h3 class="text-3xl font-black text-slate-800 tracking-tight">{{ $user->name }}</h3>
-                        <div class="flex items-center gap-2 mt-2">
-                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em] 
-                                {{ $user->level == 'anggota' ? 'bg-indigo-100 text-indigo-700' : ($user->level == 'petugas' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700') }}">
-                                {{ $user->level }}
-                            </span>
-                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                            <span class="text-[10px] font-bold text-green-600 uppercase tracking-widest">Aktif</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-6">
-                    <div>
-                        <label class="text-sm font-bold text-slate-600 ml-1">Nama Lengkap <span class="text-red-500">*</span></label>
-                        <input type="text" name="name" value="{{ $user->name }}" 
-                            class="w-full bg-slate-50 border-gray-100 rounded-2xl px-6 py-4 text-slate-700 font-medium focus:ring-2 focus:ring-indigo-200 transition-all mt-1.5 shadow-inner">
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="text-sm font-bold text-slate-600 ml-1">Email <span class="text-red-500">*</span></label>
-                            <input type="email" name="email" value="{{ $user->email }}" 
-                                class="w-full bg-slate-50 border-gray-100 rounded-2xl px-6 py-4 text-slate-700 font-medium focus:ring-2 focus:ring-indigo-200 transition-all mt-1.5 shadow-inner">
-                        </div>
-                        
-                        <div>
-                            <label class="text-sm font-bold text-slate-600 ml-1">Nomor Telepon</label>
-                            <input type="text" name="nomor_telepon" value="{{ $user->petugas?->no_hp ?? $user->anggota?->no_hp ?? '' }}" 
-                                class="w-full bg-slate-50 border-gray-100 rounded-2xl px-6 py-4 text-slate-700 font-medium focus:ring-2 focus:ring-indigo-200 transition-all mt-1.5 shadow-inner" placeholder="Contoh: 08123...">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="text-sm font-bold text-slate-600 ml-1">Alamat</label>
-                        <textarea name="alamat" rows="4" 
-                            class="w-full bg-slate-50 border-gray-100 rounded-2xl px-6 py-4 text-slate-700 font-medium focus:ring-2 focus:ring-indigo-200 transition-all mt-1.5 shadow-inner">{{ $user->anggota?->alamat ?? '' }}</textarea>
-                    </div>
-
-                    <div class="bg-gray-50 p-6 rounded-2xl border border-dashed border-gray-200 mt-8">
-                        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Informasi Tambahan (Read Only)</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
-                            @if($user->level == 'anggota')
-                                <p class="text-sm text-slate-600">Username: <span class="font-bold text-slate-900 ml-1">{{ $user->email }}</span></p>
-                                <p class="text-sm text-slate-600">NIS: <span class="font-bold text-slate-900 ml-1">{{ $user->anggota?->nis ?? '-' }}</span></p>
-                                <p class="text-sm text-slate-600 md:col-span-2">Kelas: <span class="font-bold text-slate-900 ml-1">{{ $user->anggota?->kelas ?? '-' }}</span></p>
-                            @elseif($user->level == 'petugas')
-                                <p class="text-sm text-slate-600">Username: <span class="font-bold text-slate-900 ml-1">{{ $user->email }}</span></p>
-                                <p class="text-sm text-slate-600">NIP: <span class="font-bold text-slate-900 ml-1">{{ $user->petugas?->nip_petugas ?? '-' }}</span></p>
-                            @endif
-                            <p class="text-sm text-slate-600 md:col-span-2 italic">Bergabung sejak: <span class="font-bold text-slate-900 not-italic ml-1">{{ $user->created_at->translatedFormat('d F Y') }}</span></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-10 pt-8 border-t border-gray-100">
-                    <button type="submit" class="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center gap-2">
-                        <i class="fas fa-save"></i> Simpan Perubahan
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <div class="space-y-8">
-            <form action="{{ route('profile.update.password') }}" method="POST" class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-                @csrf
-                <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                    <span class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-500 flex items-center justify-center text-sm"><i class="fas fa-lock"></i></span>
-                    Ganti Password
-                </h3>
-
-                <div class="space-y-5">
-                    <div>
-                        <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Password Lama <span class="text-red-500">*</span></label>
-                        <input type="password" name="current_password" required
-                            class="w-full bg-slate-50 border-none rounded-xl px-5 py-3.5 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500 mt-1 shadow-inner">
-                    </div>
-                    
-                    <div>
-                        <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Password Baru <span class="text-red-500">*</span></label>
-                        <input type="password" name="new_password" required
-                            class="w-full bg-slate-50 border-none rounded-xl px-5 py-3.5 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500 mt-1 shadow-inner" placeholder="Min. 6 karakter">
-                    </div>
-                    
-                    <div>
-                        <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Konfirmasi <span class="text-red-500">*</span></label>
-                        <input type="password" name="new_password_confirmation" required
-                            class="w-full bg-slate-50 border-none rounded-xl px-5 py-3.5 text-slate-700 font-bold focus:ring-2 focus:ring-indigo-500 mt-1 shadow-inner">
-                    </div>
-                </div>
-
-                <div class="mt-8 pt-6 border-t border-gray-50 text-center">
-                    <button type="submit" class="w-full py-3.5 bg-amber-500 text-white rounded-xl font-bold shadow-xl shadow-amber-100 hover:bg-amber-600 transition-all">
-                        Ubah Password
-                    </button>
-                    <p class="text-[10px] text-slate-400 italic mt-3">Gantilah password secara berkala demi keamanan data.</p>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 @endsection

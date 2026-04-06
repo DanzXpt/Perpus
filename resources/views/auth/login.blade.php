@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
 
@@ -49,6 +46,9 @@
                     </div>
                 </div>
 
+                <div class="text-center">
+                    <span class="text-xs text-center">Belum Mempunyai Akun <a href="http:/register" class="text-indigo-600 hover:underline ">Registrasi</a>?  Terlebih dahulu</span> 
+                </div>
                 {{-- Tombol Login --}}
                 <div class="pt-2">
                     <button type="submit" 

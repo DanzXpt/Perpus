@@ -8,7 +8,7 @@
             <p class="text-sm text-slate-500 italic">Mengubah data profil untuk: <span class="font-bold text-indigo-600">{{ $user->name }}</span></p>
         </div>
         <div class="px-4 py-2 bg-slate-100 text-slate-600 rounded-2xl text-[10px] font-bold uppercase tracking-widest border border-slate-200">
-            Level: {{ $user->level }}
+            role: {{ $user->role }}
         </div>
     </div>
 
@@ -25,7 +25,7 @@
     @endif
 
     <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden p-8">
-        <form action="{{ route('admin.akun.update', $user->id) }}" method="POST" class="space-y-8">
+        <form action="{{ route('kepala.akun.update', $user->id) }}" method="POST" class="space-y-8">
             @method('PUT')
             @csrf
 
@@ -52,12 +52,12 @@
                 </div>
             </div>
 
-            {{-- Data Spesifik Level --}}
+            {{-- Data Spesifik role --}}
             <div class="space-y-5">
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">Detail Identitas</h3>
 
                 {{-- FORM ANGGOTA --}}
-                @if($user->level == 'anggota')
+                @if($user->role == 'anggota')
                 <div class="space-y-4">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-1">
@@ -71,7 +71,7 @@
                             <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-tight">Kelas *</label>
                             <input type="text" name="kelas" 
                                 class="w-full px-4 py-2.5 rounded-xl border @error('kelas') border-rose-500 @else border-slate-200 @enderror focus:border-indigo-500 outline-none text-sm font-bold"
-                                value="{{ old('kelas', $user->anggota?->kelas) }}">
+                                value="{{ old('kelas', $user->anggota->kelas) }}">
                             @error('kelas') <p class="text-[10px] text-rose-500 mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
@@ -84,37 +84,37 @@
                 @endif
 
                 {{-- FORM PETUGAS --}}
-                @if($user->level == 'petugas')
+                @if($user->role == 'petugas')
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-1">
                         <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-tight">NIP Petugas</label>
                         <input type="text" name="nip_petugas" 
                             class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold"
-                            value="{{ old('nip_petugas', $user->petugas?->nip_petugas) }}">
+                            value="{{ old('nip_petugas', $user->petugas->nip) }}">
                     </div>
                     <div class="space-y-1">
                         <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-tight">No. HP / WhatsApp</label>
                         <input type="text" name="no_hp" 
                             class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold text-emerald-600"
-                            value="{{ old('no_hp', $user->petugas?->no_hp) }}">
+                            value="{{ old('no_hp', $user->petugas->no_hp) }}">
                     </div>
                 </div>
                 @endif
 
                 {{-- FORM KEPALA --}}
-                @if($user->level == 'kepala')
+                @if($user->role == 'kepala')
                 <div class="space-y-1">
                     <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-tight">NIP Kepala Perpus</label>
-                    <input type="text" name="nip_kepala" 
+                    <input type="text" name="nip" 
                         class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold"
-                        value="{{ old('nip_kepala', $user->kepala?->nip_kepala) }}">
+                        value="{{ old('nip_kepala', $user->kepala->nip) }}">
                 </div>
                 @endif
             </div>
 
             {{-- Tombol Aksi --}}
             <div class="flex items-center justify-between pt-6 border-t border-slate-50">
-                <a href="{{ route('admin.akun.index') }}" class="text-sm font-bold text-slate-400 hover:text-slate-600 transition-colors">
+                <a href="{{ route('kepala.akun.index') }}" class="text-sm font-bold text-slate-400 hover:text-slate-600 transition-colors">
                     <i class="fas fa-arrow-left mr-1"></i> Batalkan
                 </a>
                 <button type="submit" 

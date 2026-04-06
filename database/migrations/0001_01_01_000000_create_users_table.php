@@ -12,7 +12,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('level'); // anggota / petugas / kepala
+            $table->enum('role',['anggota','petugas','kepala'])->default('anggota'); // anggota / petugas / kepala
             $table->timestamps();
         });
     }

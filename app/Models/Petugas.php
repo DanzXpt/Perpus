@@ -10,16 +10,10 @@ class Petugas extends Model
     use HasFactory;
 
     // Nama tabel di database
-    protected $table = 'petugass';
+    protected $table = 'petugas';
 
     // Kolom yang boleh diisi (Mass Assignment)
-    protected $fillable = [
-        'user_id',      // Relasi ke tabel users
-        'nip',          // Nomor Induk Pegawai (Opsional)
-        'nama_petugas',
-        'no_telp',
-        'alamat'
-    ];
+    protected $guarded = [];
 
     /**
      * Relasi ke Model User (Akun Login)

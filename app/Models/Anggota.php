@@ -10,19 +10,9 @@ class Anggota extends Model
     use HasFactory;
 
     // Nama tabel di database
-    protected $table = 'anggotas';
+    protected $table = 'anggota';
 
-    // Kolom yang boleh diisi (Mass Assignment)
-    protected $fillable = [
-        'user_id',       // Relasi ke tabel users
-        'nis_nim',       // Nomor Induk Siswa/Mahasiswa
-        'nama_lengkap',
-        'tempat_lahir',
-        'tanggal_lahir',
-        'jenis_kelamin',
-        'no_telp',
-        'alamat'
-    ];
+    protected $guarded = [];
 
     /**
      * Relasi ke Model User (Akun Login)
@@ -45,8 +35,8 @@ class Anggota extends Model
     /**
      * Relasi ke Koleksi Pribadi (Buku Favorit)
      */
-    public function koleksis()
-    {
-        return $this->hasMany(KoleksiPribadi::class, 'anggota_id');
-    }
+    // public function koleksis()
+    // {
+    //     return $this->hasMany(KoleksiPribadi::class, 'anggota_id');
+    // }
 }

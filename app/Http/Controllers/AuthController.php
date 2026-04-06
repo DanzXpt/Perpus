@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    public function index()
+    {
+        return view('auth.login');
+    }
     public function showLogin()
     {
         return view('auth.login');
@@ -16,23 +22,52 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            // Redirect sesuai level setelah login berhasil
-            if (auth()->user()->level == 'petugas') {
-                return redirect()->intended('/petugas/dashboard');
+            if (Auth::user()->role === 'anggota') {
+                return redirect('/anggota/dashboard');
+            } elseif (Auth::user()->role === 'petugas') {
+                return redirect('/petugas/dashboard');
+            } elseif (Auth::user()->role === 'kepala') {
+                return redirect('/kepala/dashboard');
+            } else {
+                return back()->with('error', 'Error');
             }
-            return redirect()->intended('/anggota/dashboard');
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->onlyInput('email');
+        return back()->with('error', 'Email atau Password salah!');
+    }
+
+    public function register()
+    {
+        return view('auth.register');
+    }
+
+    public function storeRegister(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ], [
+            'email.unique' => 'Email ini sudah terdaftar!',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.'
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'anggota', // Standar buat yang daftar sendiri
+        ]);
+
+        Auth::login($user);
+
+        // Langsung lempar ke dashboard anggota
+        return redirect()->route('anggota.dashboard')->with('success', 'Pendaftaran berhasil!');
     }
 
     public function logout(Request $request)

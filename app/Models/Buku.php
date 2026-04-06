@@ -13,7 +13,13 @@ class Buku extends Model
         'tahun_terbit',
         'stok',
         'kategori_id',
-        'cover' // <--- Pastikan semua ini ada!
+        'cover',
+        'name',
+        'email',
+        'password',
+        'role',
+        'no_telp',
+        'alamat'
     ];
     public function peminjamans()
     {

@@ -10,7 +10,7 @@ class KepalaPerpus extends Model
     use HasFactory;
 
     // Nama tabel khusus untuk Kepala
-    protected $table = 'kepala_perpuses';
+    protected $table = 'kepala_perpus';
 
     // Kolom yang boleh diisi
     protected $fillable = [
