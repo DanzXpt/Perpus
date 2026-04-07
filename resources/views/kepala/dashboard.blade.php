@@ -4,7 +4,7 @@
     <div class="max-w-7xl mx-auto px-4">
 
         <div class="mb-8">
-            <h2 class="text-2xl font-black text-slate-800">Laporan Eksekutif</h2>
+            <h2 class="text-2xl font-black text-slate-800">Laporan Kepala</h2>
             <p class="text-sm text-slate-500">Ringkasan performa perpustakaan digital hari ini.</p>
         </div>
 

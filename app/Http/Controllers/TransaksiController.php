@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Peminjaman;
-use App\Models\Transaksi; // Atau Peminjaman, sesuaikan nama Modelmu
+use Illuminate\Http\Request;
+use App\Models\Transaksi;
 use App\Models\Buku;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\Models\Peminjaman;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TransaksiController extends Controller
 {
     // 1. Menampilkan Tabel Transaksi
     public function index()
     {
-        // Ambil data peminjaman, urutkan dari yang terbaru
-        $peminjaman = Transaksi::with(['user', 'buku'])->latest()->paginate(10);
+        $peminjaman = Peminjaman::with(['user', 'buku'])->latest()->paginate(10);
         return view('petugas.dashboard.index', compact('peminjaman'));
     }
 
@@ -33,7 +33,7 @@ class TransaksiController extends Controller
         // Jika terlambat (lebih dari tgl jatuh tempo)
         if ($tgl_sekarang > $tgl_kembali) {
             $selisih_hari = $tgl_sekarang->diffInDays($tgl_kembali);
-            $denda = $selisih_hari * 1000; 
+            $denda = $selisih_hari * 1000;
         }
 
         $pinjam->update([
@@ -46,5 +46,14 @@ class TransaksiController extends Controller
         $pinjam->buku->increment('stok');
 
         return back()->with('success', 'Buku berhasil dikembalikan! Denda: Rp ' . number_format($denda));
+    }
+
+    public function cetak()
+    {
+        $transaksi = Peminjaman::with('user', 'buku')->latest()->get();
+
+        $pdf = Pdf::loadView('petugas.transaksi.cetak', compact('transaksi'));
+        return $pdf->stream('laporan-transaksi.pdf');
+
     }
 }

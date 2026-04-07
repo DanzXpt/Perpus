@@ -167,6 +167,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/petugas/pengajuan/{id}/tolak', [PetugasController::class, 'tolakPengajuan'])
             ->name('petugas.pengajuan.tolak');
+
+        Route::get('/petugas/transaksi/cetak', [TransaksiController::class, 'cetak'])
+            ->name('petugas.transaksi.cetak');
     });
 
 

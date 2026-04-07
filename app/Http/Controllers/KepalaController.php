@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buku;
+use App\Models\Peminjaman;
 use App\Models\User;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
@@ -12,19 +13,20 @@ class KepalaController extends Controller
     public function index()
     {
         // 1. Ambil data dasar
-        $totalJudulBuku = \App\Models\Buku::count();
-        $totalStokBuku = \App\Models\Buku::sum('stok');
-        $totalAnggota = \App\Models\User::where('role', 'anggota')->count();
-        $totalPinjam = \App\Models\Transaksi::where('status', 'dipinjam')->count();
+        $totalJudulBuku = Buku::count();
+        $totalStokBuku = Buku::sum('stok');
+        $totalAnggota = User::where('role', 'anggota')->count();
+        $totalPinjam = Transaksi::where('status', 'dipinjam')->count();
 
         // 2. HITUNG BUKU TERLAMBAT (Ini yang bikin error di baris 35 tadi)
         // Logikanya: Status masih 'dipinjam' DAN tanggal kembali seharusnya sudah lewat dari hari ini
-        $terlambat = \App\Models\Transaksi::where('status', 'dipinjam')
+        $terlambat = Transaksi::where('status', 'dipinjam')
             ->where('tgl_kembali', '<', now()) // Sesuaikan nama kolom tanggal matimu (tgl_kembali / tgl_batas)
             ->count();
 
         // 3. Tembak 0 buat denda (biar aman dari error Column Not Found)
-        $totalDenda = 0;
+        $totalDenda = Peminjaman::where('status', 'kembali')->sum('denda');
+
 
         // 4. KIRIM SEMUANYA KE VIEW (WAJIB MASUK COMPACT SEMUA!)
         return view('kepala.dashboard', compact(
@@ -58,7 +60,7 @@ class KepalaController extends Controller
     // Tambahkan fungsi show
     public function show($id)
     {
-        $user = \App\Models\User::findOrFail($id);
+        $user = User::findOrFail($id);
         return view('kepala.akun.view', compact('user'));
         // (Jangan lupa buat file view/kepala/akun/view.blade.php nya nanti)
     }
@@ -69,7 +71,7 @@ class KepalaController extends Controller
     public function edit($id)
     {
         // Cari data user berdasarkan ID
-        $user = \App\Models\User::findOrFail($id);
+        $user = User::findOrFail($id);
 
         // Arahkan ke file view edit (pastikan filenya ada nanti)
         return view('kepala.akun.edit', compact('user'));
@@ -78,18 +80,14 @@ class KepalaController extends Controller
     public function update(Request $request, $id)
     {
         // Logika simpan perubahan data user
-        $user = \App\Models\User::findOrFail($id);
+        $user = User::findOrFail($id);
         $user->update($request->all());
 
         return redirect()->route('kepala.akun.index')->with('success', 'Data berhasil diupdate!');
     }
 
-    // Tambahkan ini di dalam class KepalaController
-
     public function create()
     {
-        // Arahkan ke file view form tambah
-        // Pastikan kamu sudah buat filenya di resources/views/kepala/akun/create.blade.php
         return view('kepala.akun.create');
     }
     public function store(Request $request)
@@ -108,7 +106,7 @@ class KepalaController extends Controller
         ]);
 
         // 2. Simpan Data ke Database
-        \App\Models\User::create([
+        User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
@@ -133,11 +131,10 @@ class KepalaController extends Controller
     {
         // Ambil data peminjaman, relasikan dengan user dan buku
         // Kita urutkan dari yang paling baru pinjam
-        $transaksi = \App\Models\Peminjaman::with(['user', 'buku'])
+        $transaksi = Peminjaman::with(['user', 'buku'])
             ->latest()
             ->paginate(10); // Pakai paginate supaya kalau datanya banyak nggak kepanjangan
 
         return view('kepala.transaksi.index', compact('transaksi'));
     }
-
 }

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buku;
+use App\Models\Transaksi;
 use App\Models\User;
-use App\Models\Peminjaman; // Pastikan kamu sudah buat model Peminjaman
+use App\Models\Peminjaman; 
 use Carbon\Carbon;
 
 
@@ -95,4 +96,5 @@ class PetugasController extends Controller
 
         return back()->with('success', 'Pengajuan ditolak');
     }
+
 }

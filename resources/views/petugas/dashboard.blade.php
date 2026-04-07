@@ -4,7 +4,7 @@
     <div class="p-8 bg-slate-50 min-h-screen">
 
         {{-- Header Dashboard --}}
-        <div class="flex justify-between items-center mb-8 border-b border-slate-100 pb-6">
+        {{-- <div class="flex justify-between items-center mb-8 border-b border-slate-100 pb-6">
             <div>
                 <h1 class="text-3xl font-black text-slate-800 tracking-tighter">Dashboard</h1>
                 <p class="text-slate-500 text-sm font-medium mt-1">Selamat datang kembali, {{ Auth::user()->name }}!</p>
@@ -20,7 +20,7 @@
                     {{ substr(Auth::user()->name, 0, 1) }}
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         {{-- Grid Statistik --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
@@ -85,7 +85,7 @@
                 class="lg:col-span-8 bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden group hover:border-blue-100 transition-all">
                 <div class="p-8 border-b border-slate-50 flex justify-between items-center">
                     <h2 class="font-black text-slate-800 text-lg tracking-tight">Peminjaman Terbaru</h2>
-                    <a href="{{ route('petugas.dashboard') }}"
+                    <a href="{{ route('petugas.transaksi') }}"
                         class="px-5 py-2.5 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-md shadow-blue-200">
                         Lihat Semua <i class="fas fa-chevron-right ml-1"></i>
                     </a>

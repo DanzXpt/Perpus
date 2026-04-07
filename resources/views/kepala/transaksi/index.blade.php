@@ -24,7 +24,7 @@
                     <td class="p-4 text-slate-600">{{ ($transaksi->currentPage()-1) * $transaksi->perPage() + $loop->iteration }}</td>
                     <td class="p-4 font-medium text-slate-800">{{ $t->user->name ?? 'User Terhapus' }}</td>
                     <td class="p-4 text-slate-600">{{ $t->buku->judul ?? 'Buku Terhapus' }}</td>
-                    <td class="p-4 text-slate-600">{{ date('d M Y', strtotime($t->tanggal_peminjaman)) }}</td>
+                    <td class="p-4 text-slate-600">{{ date('d M Y', strtotime($t->tanggal_pinjam)) }}</td>
                     <td class="p-4">
                         @if($t->status == 'dipinjam')
                             <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold uppercase">Dipinjam</span>

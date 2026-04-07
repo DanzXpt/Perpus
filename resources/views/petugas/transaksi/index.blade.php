@@ -10,8 +10,14 @@
                 <h3 class="font-black text-slate-800 text-xl">Daftar Peminjaman</h3>
                 <p class="text-slate-400 text-sm font-medium">Kelola semua aktivitas pinjam-meminjam buku.</p>
             </div>
-            <div class="bg-indigo-50 text-indigo-600 px-6 py-2 rounded-2xl font-bold text-sm">
+            <div class="bg-indigo-50 text-indigo-600 px-6 py-2 rounded-md font-bold text-sm">
                 Total: {{ $transaksi->total() }} Data
+            </div>
+            <div class="">
+                <a href="{{ route('petugas.transaksi.cetak') }}" target="_blank"
+                    class="bg-indigo-600 text-white px-4 py-2 rounded-lg">
+                    Cetak Pdf
+                </a>
             </div>
         </div>
 
