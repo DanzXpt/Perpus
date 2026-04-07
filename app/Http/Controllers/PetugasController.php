@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Buku;
 use App\Models\Transaksi;
 use App\Models\User;
-use App\Models\Peminjaman; 
+use App\Models\Peminjaman;
 use Carbon\Carbon;
 
 
@@ -14,24 +14,19 @@ class PetugasController extends Controller
     /**
      * Dashboard Utama Petugas (Tampilan Statistik)
      */
-    public function index()
+    public function dashboard()
     {
-        // 1. Hitung Total Buku & Anggota
         $totalBuku = Buku::count();
         $totalAnggota = User::where('role', 'anggota')->count();
 
-        // 2. Hitung Status Peminjaman
         $totalDipinjam = Peminjaman::where('status', 'dipinjam')->count();
 
-        // 3. Logika Terlambat (Berdasarkan tanggal jatuh tempo yang sudah lewat)
         $totalTerlambat = Peminjaman::where('status', 'dipinjam')
             ->where('tanggal_kembali', '<', Carbon::today())
             ->count();
 
-        // 4. Hitung Total Denda yang sudah dibayar
         $totalDenda = Peminjaman::where('status', 'kembali')->sum('denda');
 
-        // 5. Ambil 5 Transaksi Terbaru untuk Tabel
         $peminjamanTerbaru = Peminjaman::with(['user', 'buku'])
             ->latest()
             ->paginate(5);
@@ -64,7 +59,7 @@ class PetugasController extends Controller
         $pengajuan = Peminjaman::with(['user', 'buku'])
             ->where('status', 'pending')
             ->latest()
-            ->paginate(10);
+            ->paginate(5);
 
         return view('petugas.pengajuan.index', compact('pengajuan'));
     }
@@ -76,7 +71,7 @@ class PetugasController extends Controller
         $peminjaman->update([
             'status' => 'dipinjam',
             'tanggal_pinjam' => now(),
-            'tanggal_kembali' => now()->addDays(7)
+            'tanggal_kembali' => now()->addDays(4)
         ]);
 
         // kurangi stok buku

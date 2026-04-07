@@ -13,8 +13,8 @@ class BukuController extends Controller
 
     public function index(Request $request)
     {
-        $kategori = \App\Models\Kategori::all();
-        $query = \App\Models\Buku::with('kategori');
+        $kategori = Kategori::all();
+        $query = Buku::with('kategori');
 
         // 1. Filter Kategori (Jalankan duluan)
         if ($request->filled('kategori')) {
@@ -30,7 +30,7 @@ class BukuController extends Controller
             });
         }
 
-        $buku = $query->latest()->paginate(10);
+        $buku = $query->latest()->paginate(12);
 
         if (auth()->user()->role == 'anggota') {
             return view('anggota.buku', compact('buku', 'kategori'));
@@ -42,7 +42,7 @@ class BukuController extends Controller
 
     public function create()
     {
-        $kategori = \App\Models\Kategori::all();
+        $kategori = Kategori::all();
         return view('petugas.buku.tambahbuku', compact('kategori'));
     }
 

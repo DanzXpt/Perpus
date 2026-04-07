@@ -86,11 +86,15 @@
                     </tbody>
                 </table>
             </div>
+        </div>
 
-            {{-- Pagination --}}
-            <div class="p-8 bg-slate-50/50 border-t border-slate-100">
-                {{ $transaksi->links() }}
-            </div>
+        {{-- Pagination --}}
+        <div class="mt-6 flex justify-between items-center">
+            <p class="text-sm text-slate-500">
+                Menampilkan {{ $transaksi->firstItem() }} - {{ $transaksi->lastItem() }} dari {{ $transaksi->total() }}
+                transaksi</p>
+
+            {{ $transaksi->links() }}
         </div>
     </div>
 @endsection

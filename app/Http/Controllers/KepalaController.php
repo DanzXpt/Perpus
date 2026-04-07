@@ -43,7 +43,6 @@ class KepalaController extends Controller
     {
         $users = User::latest()->paginate(10);
 
-        // Alamat baru: folder kepala -> folder akun -> file file
         return view('kepala.akun.index', compact('users'));
     }
 

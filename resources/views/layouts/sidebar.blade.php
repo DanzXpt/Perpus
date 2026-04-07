@@ -101,7 +101,7 @@
                 </span>
             </a>
 
-            <a href="{{ route('petugas.transaksi') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
+            <a href="{{ route('petugas.transaksi.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
                         {{ request()->routeIs('petugas.transaksi')
             ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
             : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">

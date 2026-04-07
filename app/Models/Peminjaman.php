@@ -20,15 +20,16 @@ class Peminjaman extends Model
         'denda'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function buku()
     {
         return $this->belongsTo(Buku::class, 'buku_id');
     }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
 
     protected $casts = [
         'tanggal_pinjam' => 'date',

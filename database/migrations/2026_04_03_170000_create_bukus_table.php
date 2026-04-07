@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('penulis');
             $table->string('penerbit');
             $table->integer('tahun_terbit');
+            $table->integer('kategori_id');
             $table->integer('stok')->default(0);
             $table->string('cover')->nullable(); 
             $table->timestamps();

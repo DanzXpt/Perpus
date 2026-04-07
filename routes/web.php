@@ -131,14 +131,17 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::middleware(isPetugas::class)->group(function () {
 
-        Route::get('/petugas/dashboard', [PetugasController::class, 'index'])
+        Route::get('/petugas/dashboard', [PetugasController::class, 'dashboard'])
             ->name('petugas.dashboard');
 
-        Route::get('/petugas/transaksi', [PetugasController::class, 'transaksi'])
-            ->name('petugas.transaksi');
+        Route::get('petugas/transaksi', [TransaksiController::class, 'index'])
+            ->name('petugas.transaksi.index');
 
-        Route::put('/transaksi/{id}/kembali', [TransaksiController::class, 'kembalikanBuku'])
+        Route::put('/kembali/{id}', [TransaksiController::class, 'kembalikanBuku'])
             ->name('petugas.kembali');
+
+        Route::get('/transaksi/cetak', [TransaksiController::class, 'cetak'])
+            ->name('petugas.transaksi.cetak');
 
         /*
         |--------------------------------------------------------------------------
