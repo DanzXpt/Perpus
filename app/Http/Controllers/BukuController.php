@@ -55,8 +55,8 @@ class BukuController extends Controller
             'penerbit' => 'required|string|max:255',
             'tahun_terbit' => 'required|integer',
             'stok' => 'required|numeric|min:0',
-            'kategori_id' => 'required|exists:kategoris,id', // Biar gak NULL lagi
-            'cover' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'kategori_id' => 'required|exists:kategoris,id', 
+            'cover' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $data = $request->all();
@@ -93,7 +93,7 @@ class BukuController extends Controller
             'tahun_terbit' => 'required|integer',
             'stok' => 'required|numeric|min:0',
             'kategori_id' => 'required|exists:kategoris,id',
-            'cover' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'cover' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
 

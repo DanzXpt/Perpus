@@ -34,8 +34,7 @@ class PetugasController extends Controller
         // 5. Ambil 5 Transaksi Terbaru untuk Tabel
         $peminjamanTerbaru = Peminjaman::with(['user', 'buku'])
             ->latest()
-            ->take(5)
-            ->get();
+            ->paginate(5);
 
         return view('petugas.dashboard', compact(
             'totalBuku',
@@ -65,7 +64,7 @@ class PetugasController extends Controller
         $pengajuan = Peminjaman::with(['user', 'buku'])
             ->where('status', 'pending')
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('petugas.pengajuan.index', compact('pengajuan'));
     }

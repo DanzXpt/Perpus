@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('penerbit');
             $table->integer('tahun_terbit');
             $table->integer('stok')->default(0);
-            $table->string('cover')->nullable(); // Simpan nama file gambar
+            $table->string('cover')->nullable(); 
             $table->timestamps();
         });
     }
