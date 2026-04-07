@@ -134,8 +134,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/petugas/dashboard', [PetugasController::class, 'index'])
             ->name('petugas.dashboard');
 
-        Route::get('/petugas/transaksi', [TransaksiController::class, 'index'])
+        Route::get('/petugas/transaksi', [PetugasController::class, 'transaksi'])
             ->name('petugas.transaksi');
+
+        Route::put('/transaksi/{id}/kembali', [TransaksiController::class, 'kembalikanBuku'])
+            ->name('petugas.kembali');
 
         /*
         |--------------------------------------------------------------------------
@@ -179,14 +182,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/anggota/buku', [BukuController::class, 'index'])
             ->name('anggota.buku');
 
+        Route::post('/anggota/pinjam/{id}', [PeminjamanController::class, 'store'])
+            ->name('anggota.pinjam.store');
+
         Route::get('/anggota/pengajuan', [AnggotaController::class, 'pengajuan'])
             ->name('anggota.pengajuan.index');
 
         Route::get('/anggota/riwayat', [AnggotaController::class, 'riwayat'])
             ->name('anggota.riwayat');
 
-        Route::post('/anggota/pinjam/{id}', [PeminjamanController::class, 'store'])
-            ->name('anggota.pinjam.store');
 
         Route::post('/anggota/kembalikan/{id}', [AnggotaController::class, 'kembalikan'])
             ->name('anggota.kembalikan');

@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Peminjaman extends Model
 {
     use HasFactory;
-    // protected $guarded = [];
 
-    // TAMBAHKAN BARIS INI:
     protected $table = 'peminjamans';
 
     protected $fillable = [
@@ -27,14 +25,13 @@ class Peminjaman extends Model
         return $this->belongsTo(Buku::class, 'buku_id');
     }
 
-    // Tambahkan juga relasi ke User agar di halaman petugas tidak error
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     protected $casts = [
-        'tanggal_pinjam' => 'datetime',
-        'tanggal_kembali' => 'datetime',
+        'tanggal_pinjam' => 'date',
+        'tanggal_kembali' => 'date',
     ];
 }

@@ -6,7 +6,7 @@
 
         <div class="grid gap-4">
             @forelse($pengajuan as $p)
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center justify-between">
+                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
                     <div>
                         <h3 class="font-bold text-slate-800">{{ $p->user->name }}</h3>
                         <p class="text-sm text-slate-500">Ingin meminjam: <span

@@ -40,7 +40,7 @@
                 </a>
                 <a href="/register"
                     class="w-full md:w-auto bg-slate-700 text-slate-300 px-10 py-4 rounded-2xl font-bold hover:bg-slate-600 hover:-translate-y-1 transition-all border border-slate-600">
-                    Daftar Anggota
+                    Daftar Akun
                 </a>
             </div>
         </div>
@@ -48,7 +48,7 @@
     </div>
 
     <p class="absolute bottom-10 text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em]">
-        &copy; {{ date('Y') }} Ahdan Muzaki
+        &copy; {{ date('Y') }} DannzMusk
     </p>
 
 </body>

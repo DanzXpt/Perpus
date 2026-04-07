@@ -28,7 +28,7 @@ class PetugasController extends Controller
             ->count();
 
         // 4. Hitung Total Denda yang sudah dibayar
-        $totalDenda = Peminjaman::where('status', 'dikembalikan')->sum('denda');
+        $totalDenda = Peminjaman::where('status', 'kembali')->sum('denda');
 
         // 5. Ambil 5 Transaksi Terbaru untuk Tabel
         $peminjamanTerbaru = Peminjaman::with(['user', 'buku'])
@@ -51,43 +51,17 @@ class PetugasController extends Controller
      */
     public function transaksi()
     {
-        $transaksi = Peminjaman::with(['user', 'buku'])->latest()->paginate(10);
+        $transaksi = Peminjaman::with(['user', 'buku'])
+            ->latest()
+            ->paginate(10);
+
         return view('petugas.transaksi.index', compact('transaksi'));
-    }
-
-    /**
-     * Proses Validasi Pengembalian & Hitung Denda Otomatis
-     */
-    public function kembalikanBuku($id)
-    {
-        $pinjam = Peminjaman::findOrFail($id);
-        $tgl_kembali = Carbon::parse($pinjam->tanggal_kembali);
-        $tgl_sekarang = Carbon::today();
-
-        $denda = 0;
-
-        // Jika terlambat (lebih dari tgl jatuh tempo)
-        if ($tgl_sekarang > $tgl_kembali) {
-            $selisih_hari = $tgl_sekarang->diffInDays($tgl_kembali);
-            $denda = $selisih_hari * 1000; // Misal denda 1000 per hari
-        }
-
-        $pinjam->update([
-            'status' => 'dikembalikan',
-            'tanggal_realisasi' => $tgl_sekarang,
-            'denda' => $denda
-        ]);
-
-        // Tambah stok buku kembali karena sudah dikembalikan
-        $pinjam->buku->increment('stok');
-
-        return back()->with('success', 'Buku berhasil dikembalikan! Denda: Rp ' . number_format($denda));
     }
 
     public function daftarPengajuan()
     {
         // Ambil data yang statusnya masih 'pending'
-        $pengajuan = \App\Models\Peminjaman::with(['user', 'buku'])
+        $pengajuan = Peminjaman::with(['user', 'buku'])
             ->where('status', 'pending')
             ->latest()
             ->get();

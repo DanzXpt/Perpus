@@ -39,7 +39,7 @@
                     </div>
 
                     <div class="space-y-1">
-                        <label class="text-xs font-bold text-slate-700 ml-1">Alamat Email *</label>
+                        <label class="text-xs font-bold text-slate-700 ml-1">Email *</label>
                         <input type="email" name="email" value="{{ old('email') }}" required
                             class="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-indigo-500 outline-none text-sm font-medium">
                     </div>

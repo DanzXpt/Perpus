@@ -64,7 +64,7 @@
                         {{-- Floating Kategori --}}
                         <div class="absolute top-4 left-4">
                             <span class="bg-white/80 backdrop-blur-md text-slate-700 text-[9px] font-black px-3 py-1.5 rounded-xl shadow-sm uppercase border border-white/50">
-                                {{ $b->kategori->nama_kategori }}
+                                {{ $b->kategori?->nama_kategori ?? 'Tanpa Kategori' }}
                             </span>
                         </div>
                     </div>

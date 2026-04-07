@@ -32,7 +32,7 @@
                     </h1>
                     <span class="text-indigo-600 text-1xl font-semibold">{{ auth()->user()->name }}!</span>
                 </div>
-                <div class="bg-amber-200 px-6 py-3 rounded-xl shadow-sm border border-slate-100 flex items-center gap-3">
+                <div class="bg-gray-300 px-6 py-3 rounded-xl shadow-sm border border-slate-100 flex items-center gap-3">
                     <i class="fa-regular fa-calendar text-indigo-500"></i>
                     {{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}
                 </div>

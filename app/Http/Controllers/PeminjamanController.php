@@ -10,34 +10,27 @@ use Illuminate\Support\Facades\Auth;
 class PeminjamanController extends Controller
 {
     // anggota mengajukan pinjam
-    public function store(Request $request, $id)
+    public function store($id)
     {
         $buku = Buku::findOrFail($id);
 
-        if ($buku->stok <= 0) {
-            return back()->with('error', 'Stok buku habis');
+        if ($buku->stok < 1) {
+            return back()->with('error', 'Stok buku habis.');
         }
 
-        // cek sudah pernah pending
-        $cek = Peminjaman::where('user_id', Auth::id())
-            ->where('buku_id', $buku->id)
-            ->where('status', 'pending')
-            ->exists();
-
-        if ($cek) {
-            return back()->with('error', 'Kamu sudah mengajukan buku ini');
-        }
-
-        Peminjaman::create([
+        $peminjaman = Peminjaman::create([
             'user_id' => Auth::id(),
             'buku_id' => $buku->id,
             'tanggal_pinjam' => now(),
-            'tanggal_kembali' => now()->addDays(7),
-            'status' => 'pending'
+            'tanggal_kembali' => now()->addDays(4),
+            'status' => 'pending',
+            'denda' => 0,
         ]);
 
-        return redirect()->route('anggota.pengajuan.index')
-            ->with('success', 'Pengajuan berhasil dikirim');
+        // Kurangi stok buku
+        $buku->decrement('stok');
+
+        return back()->with('success', 'Buku berhasil dipinjam!');
     }
 
     // petugas setujui

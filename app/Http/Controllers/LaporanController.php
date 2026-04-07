@@ -19,22 +19,23 @@ class LaporanController extends Controller
     public function cetakBuku()
     {
         // 1. Ambil datanya dulu dari database (Pastikan Model Buku sudah di-import di atas)
-        $data_buku = \App\Models\Buku::all();
-
+        $data_buku = Buku::all();
+        
         // 2. Kirim variabelnya lewat compact
         // Nama di dalam compact('...') HARUS SAMA dengan nama variabel di atas tanpa tanda $
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('kepala.laporan.buku_pdf', compact('data_buku'));
-
+        $pdf = Pdf::loadView('kepala.laporan.buku_pdf', compact('data_buku'));
+        
         // 3. Tampilkan
         return $pdf->stream('laporan-buku.pdf');
-    }
+        }
+        
+        // Fungsi Cetak Laporan Akun
+        public function cetakAkun()
+        {
+        $user = User::all();
+        // $user = User::orderBy('id', 'asc')->get();
 
-    // Fungsi Cetak Laporan Akun
-    public function cetakAkun()
-    {
-        $users = User::all();
-
-        $pdf = Pdf::loadView('kepala.laporan.akun_pdf', compact('users'));
+        $pdf = Pdf::loadView('kepala.laporan.akun_pdf', compact('user'));
 
         return $pdf->stream('laporan-data-akun.pdf');
     }

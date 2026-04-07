@@ -16,11 +16,11 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'nis',      // Tambahkan ini
-        'kelas',    // Tambahkan ini
-        'alamat',   // Tambahkan ini
-        'nip',      // Tambahkan ini
-        'no_hp',    // Tambahkan ini
+        'nis',     
+        'kelas',  
+        'alamat',  
+        'nip',     
+        'no_hp',    
     ];
 
     protected $hidden = [

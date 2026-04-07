@@ -48,20 +48,24 @@
                 <th>Identitas (NIS/NIP)</th>
             </tr>
         </thead>
+
+        {{-- @php $no = 1; @endphp --}}
         <tbody>
+            @foreach ($user as $user )
             <tr>
-                <td class="text-center">1</td>
+                <td class="">{{ $loop->iteration }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ ucfirst($user->role) }}</td>
                 <td>
                     @if($user->role == 'anggota')
-                        {{ $user->nis ?? '-' }}
+                    {{ $user->nis ?? '-' }}
                     @else
-                        {{ $user->nip ?? '-' }}
+                    {{ $user->nip ?? '-' }}
                     @endif
                 </td>
             </tr>
+            @endforeach
         </tbody>
     </table>
 </body>
