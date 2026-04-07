@@ -37,7 +37,8 @@
                                 </td>
                                 <td class="p-4">
                                     <div class="font-bold text-slate-800 text-sm">{{ $item->user->name }}</div>
-                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-tight">ID User: #{{ $item->user->id }}</div>
+                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-tight">ID User:
+                                        #{{ $item->user->id }}</div>
                                 </td>
                                 <td class="p-4">
                                     <div class="font-medium text-slate-600 text-sm line-clamp-1">{{ $item->buku->judul }}</div>
@@ -49,20 +50,21 @@
                                     {{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d M Y') }}
                                 </td>
                                 <td class="p-4 text-center rounded-r-2xl">
-                                @if($item->status == 'dipinjam')
-                                <form action="{{ route('petugas.kembali', $item->id) }}" method="POST">
-                                    @csrf
-                                    @method('PUT') <!-- wajib biar Laravel ngerti ini PUT -->
-                                    <button type="submit"
-                                        class="bg-emerald-500 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase hover:bg-emerald-600 transition-all">
-                                        <i class="fa-solid fa-rotate-left mr-1"></i> konfirmasi
-                                    </button>
-                                </form>
-                                @else
-                                <span class="bg-emerald-100 text-emerald-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase">
-                                    <i class="fa-solid fa-check mr-1"></i> Selesai
-                                </span>
-                                @endif
+                                    @if($item->status == 'dipinjam')
+                                        <form action="{{ route('petugas.kembali', $item->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT') <!-- wajib biar Laravel ngerti ini PUT -->
+                                            <button type="submit"
+                                                class="bg-emerald-500 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase hover:bg-emerald-600 transition-all">
+                                                <i class="fa-solid fa-rotate-left mr-1"></i> konfirmasi
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span
+                                            class="bg-emerald-100 text-emerald-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase">
+                                            <i class="fa-solid fa-check mr-1"></i> Selesai
+                                        </span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
