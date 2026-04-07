@@ -11,8 +11,6 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('bukus', function (Blueprint $table) {
-            // Tambahkan kolom kategori_id setelah kolom judul (atau di mana saja)
-            // constrained() otomatis bikin foreign key ke tabel kategoris
             $table->foreignId('kategori_id')->nullable()->after('judul')->constrained('kategoris')->onDelete('set null');
         });
     }

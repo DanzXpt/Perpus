@@ -14,8 +14,8 @@ class KepalaPerpus extends Model
 
     // Kolom yang boleh diisi
     protected $fillable = [
-        'user_id',      // Relasi ke tabel users (untuk login)
-        'nip',          // Nomor Induk Pegawai
+        'user_id',     
+        'nip',          
         'nama_lengkap',
         'no_telp',
         'alamat'
