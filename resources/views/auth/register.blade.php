@@ -32,7 +32,7 @@
                         <i class="fas fa-book-reader text-white text-3xl"></i>
                     </div>
                     <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Gabung PerpusID</h2>
-                    <p class="text-slate-500 text-sm font-medium mt-1">Mulai petualangan literasimu hari ini.</p>
+                    <p class="text-slate-500 text-sm font-medium mt-1">Daftar terlebih dahulu jika belum mempunyai akun.</p>
                 </div>
 
                 @if ($errors->any())

@@ -4,7 +4,7 @@
 <div class="p-6">
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-slate-800">Pusat Laporan Perpustakaan</h1>
-        <p class="text-slate-500">Silakan pilih laporan yang ingin dicetak ke format PDF.</p>
+        <p class="text-slate-500">Pilih laporan yang ingin dicetak ke format PDF.</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
