@@ -68,7 +68,9 @@
                 <div class="relative z-10">
                     <p class="text-slate-400 text-[10px] font-black uppercase mb-2 text-emerald-600 tracking-widest">Total
                         Denda</p>
-                    <h3 class="text-xl font-black text-emerald-600 italic">Rp {{ number_format($totalDenda, 0, ',', '.') }}
+                    <h3 class="text-xl font-black text-emerald-600 italic">
+                        Rp{{ number_format(abs($totalDenda), 0, ',', '.') }}
+
                     </h3>
                 </div>
                 <i
@@ -101,9 +103,11 @@
                             <tr class="bg-slate-50/50 hover:bg-slate-100/80 transition-all group">
                                 <td class="p-4 rounded-l-2xl">
                                     <div class="font-bold text-sm text-slate-700 group-hover:text-indigo-600 transition-colors">
-                                        {{ $item->buku->judul }}</div>
+                                        {{ $item->buku->judul }}
+                                    </div>
                                     <div class="text-[10px] text-slate-400 font-medium">Dipinjam:
-                                        {{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d M Y') }}</div>
+                                        {{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d M Y') }}
+                                    </div>
                                 </td>
                                 <td
                                     class="p-4 text-center text-sm font-black {{ \Carbon\Carbon::parse($item->tanggal_kembali)->isPast() ? 'text-rose-500' : 'text-slate-600' }}">

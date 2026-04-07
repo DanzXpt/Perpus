@@ -41,7 +41,7 @@
         @if(Auth::user()->role == 'kepala')
 
             <a href="{{ route('kepala.akun.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                        {{ request()->routeIs('kepala.akun.*')
+                                {{ request()->routeIs('kepala.akun.*')
             ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
             : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
 
@@ -52,7 +52,7 @@
             </a>
 
             <a href="{{ route('petugas.buku.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                        {{ request()->routeIs('petugas.buku.*')
+                                {{ request()->routeIs('petugas.buku.*')
             ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
             : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
 
@@ -63,7 +63,7 @@
             </a>
 
             <a href="{{ route('kepala.transaksi.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                        {{ request()->routeIs('kepala.transaksi.*')
+                                {{ request()->routeIs('kepala.transaksi.*')
             ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
             : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
 
@@ -74,7 +74,7 @@
             </a>
 
             <a href="{{ route('kepala.laporan.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                        {{ request()->routeIs('kepala.laporan.*')
+                                {{ request()->routeIs('kepala.laporan.*')
             ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
             : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
 
@@ -91,7 +91,7 @@
         @if(Auth::user()->role == 'petugas')
 
             <a href="{{ route('petugas.buku.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                        {{ request()->routeIs('petugas.buku.*')
+                                {{ request()->routeIs('petugas.buku.*')
             ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
             : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
 
@@ -102,7 +102,7 @@
             </a>
 
             <a href="{{ route('petugas.transaksi.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                        {{ request()->routeIs('petugas.transaksi')
+                                {{ request()->routeIs('petugas.transaksi.index')
             ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
             : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
 
@@ -113,7 +113,7 @@
             </a>
 
             <a href="{{ route('petugas.pengajuan.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                        {{ request()->routeIs('petugas.pengajuan.*')
+                                {{ request()->routeIs('petugas.pengajuan.*')
             ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
             : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
 
@@ -130,7 +130,7 @@
         @if(Auth::user()->role == 'anggota')
 
             <a href="{{ route('anggota.buku') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                        {{ request()->routeIs('anggota.buku')
+                                {{ request()->routeIs('anggota.buku')
             ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
             : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
 
@@ -141,7 +141,7 @@
             </a>
 
             <a href="{{ route('anggota.riwayat') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                        {{ request()->routeIs('anggota.riwayat')
+                                {{ request()->routeIs('anggota.riwayat')
             ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
             : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
 
@@ -152,7 +152,7 @@
             </a>
 
             <a href="{{ route('anggota.pengajuan.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                        {{ request()->routeIs('anggota.pengajuan.*')
+                                {{ request()->routeIs('anggota.pengajuan.*')
             ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
             : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
 

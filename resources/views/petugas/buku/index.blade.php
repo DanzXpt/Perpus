@@ -4,7 +4,6 @@
 
     <div class="p-6">
 
-        ```
         {{-- Header --}}
         <div class="flex justify-between items-center mb-6">
             <div>

@@ -43,7 +43,7 @@
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Denda</p>
                 {{-- Baris 42 di dashboard.blade.php --}}
                 <div class="text-2xl font-black text-slate-800">
-                    Rp {{ number_format($totalDenda, 0, ',', '.') }}
+                    Rp {{ number_format(abs($totalDenda), 0, ',', '.') }}
                 </div>
             </div>
 

@@ -85,7 +85,7 @@
                 class="lg:col-span-8 bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden group hover:border-blue-100 transition-all">
                 <div class="p-8 border-b border-slate-50 flex justify-between items-center">
                     <h2 class="font-black text-slate-800 text-lg tracking-tight">Peminjaman Terbaru</h2>
-                    <a href="{{ route('petugas.transaksi') }}"
+                    <a href="{{ route('petugas.transaksi.index') }}"
                         class="px-5 py-2.5 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-md shadow-blue-200">
                         Lihat Semua <i class="fas fa-chevron-right ml-1"></i>
                     </a>
@@ -157,7 +157,7 @@
                         <i class="fas fa-book-medical text-lg opacity-50 group-hover/btn:opacity-100"></i>
                     </a>
 
-                    <a href="{{ route('petugas.transaksi') }}"
+                    <a href="{{ route('petugas.transaksi.index') }}"
                         class="flex items-center justify-between px-6 py-5 bg-blue-600 text-white rounded-[1.5rem] hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 active:scale-95 group/btn">
                         <span class="text-[11px] font-black uppercase tracking-widest italic">Transaksi Pinjam</span>
                         <i class="fa-solid fa-clipboard-list text-lg opacity-50 group-hover/btn:opacity-100"></i>
