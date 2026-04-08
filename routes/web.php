@@ -58,8 +58,6 @@ Route::middleware(['auth'])->group(function () {
     | PENGEMBALIAN BUKU (PETUGAS)
     |--------------------------------------------------------------------------
     */
-    Route::put('/transaksi/{id}/kembali', [TransaksiController::class, 'kembali'])
-        ->name('petugas.kembali');
 
 
     /*
