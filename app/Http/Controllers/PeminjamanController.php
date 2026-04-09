@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 use App\Models\Buku;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;   
 
 class PeminjamanController extends Controller
 {
+    
     // anggota mengajukan pinjam
     public function store($id)
     {

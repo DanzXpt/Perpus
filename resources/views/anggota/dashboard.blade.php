@@ -114,17 +114,26 @@
                                     {{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d M Y') }}
                                 </td>
                                 <td class="p-4 text-center rounded-r-2xl">
-                                    @if(\Carbon\Carbon::parse($item->tanggal_kembali)->isPast())
+
+                                    @if($item->status == 'terlambat')
                                         <span
                                             class="bg-rose-100 text-rose-600 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase border border-rose-200">
                                             <i class="fa-solid fa-triangle-exclamation mr-1"></i> Terlambat
                                         </span>
-                                    @else
+
+                                    @elseif($item->status == 'dipinjam')
                                         <span
                                             class="bg-amber-100 text-amber-600 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase border border-amber-200">
                                             <i class="fa-solid fa-hourglass-half mr-1"></i> Dipinjam
                                         </span>
+
+                                    @else
+                                        <span
+                                            class="bg-emerald-100 text-emerald-600 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase border border-emerald-200">
+                                            <i class="fa-solid fa-check mr-1"></i> Kembali
+                                        </span>
                                     @endif
+
                                 </td>
                             </tr>
                         @empty

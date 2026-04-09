@@ -15,7 +15,7 @@
                     <i class="fas fa-book"></i>
                 </div>
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Judul Buku</p>
-                <h3 class="text-2xl font-black text-slate-800">{{ $totalJudulBuku }}</h3>
+                <h3 class="text-2xl font-black text-slate-800">{{ $totalBuku }}</h3>
             </div>
 
             <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-all">
@@ -23,7 +23,7 @@
                     <i class="fas fa-layer-group"></i>
                 </div>
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Stok</p>
-                <h3 class="text-2xl font-black text-slate-800">{{ $totalStokBuku }} <span
+                <h3 class="text-2xl font-black text-slate-800">{{ $totalBuku }} <span
                         class="text-xs text-slate-400">Buku</span></h3>
             </div>
 
@@ -32,8 +32,8 @@
                     <i class="fas fa-clock"></i>
                 </div>
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Terlambat</p>
-                <h3 class="text-2xl font-black text-red-600">{{ $terlambat }} <span
-                        class="text-xs text-slate-400">User</span></h3>
+                <h3 class="text-2xl font-black text-red-600">{{ $totalTerlambat }} <span
+                        class="text-xs text-slate-400">Anggota</span></h3>
             </div>
 
             <div class="bg-white p-6 rounded-[2rem] border border-amber-50 shadow-sm hover:shadow-md transition-all">

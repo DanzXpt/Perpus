@@ -6,7 +6,7 @@
             <i class="fa-solid fa-book-bookmark text-xl"></i>
         </div>
         <span class="font-black text-white text-xl tracking-tight uppercase italic">
-            PERPUS<span class="text-indigo-500">ID</span>
+            E|<span class="text-indigo-500">PERPUS</span>
         </span>
     </div>
 
@@ -58,7 +58,7 @@
 
                 <i class="fa-solid fa-box text-lg"></i>
                 <span class="font-black text-sm uppercase tracking-wide">
-                    Kelola Buku
+                    Daftar Buku
                 </span>
             </a>
 
@@ -97,7 +97,7 @@
 
                 <i class="fa-solid fa-box text-lg"></i>
                 <span class="font-black text-sm uppercase tracking-wide">
-                    Kelola Buku
+                    Daftar Buku
                 </span>
             </a>
 
@@ -136,7 +136,7 @@
 
                 <i class="fa-solid fa-book-open text-lg"></i>
                 <span class="font-black text-sm uppercase tracking-wide">
-                    Katalog Buku
+                    Daftar Buku
                 </span>
             </a>
 

@@ -62,6 +62,17 @@
                     <p class="text-[9px] font-black text-emerald-600/70 uppercase tracking-widest truncate">Dipinjam</p>
                 </div>
             </div>
+            
+            {{-- Terlambat --}}
+            
+            <div class="bg-white p-6 rounded-[2rem] border border-red-50 shadow-sm hover:shadow-md transition-all">
+                <div class="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Terlambat</p>
+                <h3 class="text-2xl font-black text-red-600">{{ $totalTerlambat }} <span
+                        class="text-xs text-slate-400">Anggota</span></h3>
+            </div>
 
             {{-- Card: Total Denda --}}
             <div

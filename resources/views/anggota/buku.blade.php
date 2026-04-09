@@ -47,15 +47,19 @@
         {{-- Grid Katalog --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-8">
             @forelse($buku as $b)
-                <div class="group bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl border border-slate-100 transition-all duration-500 flex flex-col h-full">
+                <div
+                    class="group bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl border border-slate-100 transition-all duration-500 flex flex-col h-full">
 
                     {{-- Bagian Cover --}}
                     <div class="aspect-[3/4] bg-slate-100 relative overflow-hidden">
                         @if($b->cover)
-                            <img src="{{ asset('storage/' . $b->cover) }}" alt="{{ $b->judul }}"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <a href="{{ route('anggota.buku.show', $b->id) }}">
+                                <img src="{{ asset('storage/' . $b->cover) }}" alt="{{ $b->judul }}"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            </a>
                         @else
-                            <div class="w-full h-full flex flex-col items-center justify-center text-slate-300 bg-gradient-to-br from-slate-50 to-slate-100">
+                            <div
+                                class="w-full h-full flex flex-col items-center justify-center text-slate-300 bg-gradient-to-br from-slate-50 to-slate-100">
                                 <i class="fa-solid fa-book-bookmark text-5xl mb-2 opacity-20"></i>
                                 <span class="text-[10px] font-black uppercase tracking-tighter">No Preview</span>
                             </div>
@@ -63,7 +67,8 @@
 
                         {{-- Floating Kategori --}}
                         <div class="absolute top-4 left-4">
-                            <span class="bg-white/80 backdrop-blur-md text-slate-700 text-[9px] font-black px-3 py-1.5 rounded-xl shadow-sm uppercase border border-white/50">
+                            <span
+                                class="bg-white/80 backdrop-blur-md text-slate-700 text-[9px] font-black px-3 py-1.5 rounded-xl shadow-sm uppercase border border-white/50">
                                 {{ $b->kategori?->nama_kategori ?? 'Tanpa Kategori' }}
                             </span>
                         </div>
@@ -72,17 +77,25 @@
                     {{-- Konten --}}
                     <div class="p-6 flex-1 flex flex-col">
                         <div class="mb-4">
-                            <h5 class="font-black text-slate-800 text-sm line-clamp-2 mb-1 group-hover:text-indigo-600 transition-colors uppercase leading-tight">
+                            <h5
+                                class="font-black text-slate-800 text-sm line-clamp-2 mb-1 group-hover:text-indigo-600 transition-colors uppercase leading-tight">
                                 {{ $b->judul }}
                             </h5>
-                            <p class="text-[10px] text-slate-400 font-bold tracking-wide">OLEH <span class="text-slate-600">{{ $b->penulis }}</span></p>
+                            <p class="text-[10px] text-slate-400 font-bold tracking-wide">OLEH <span
+                                    class="text-slate-600">{{ $b->penulis }}</span></p>
+
+                            <p class="text-[10px] text-slate-500 mt-2 line-clamp-3">
+                                {{ $b->deskripsi ?? 'Deskripsi belum tersedia' }}
+                            </p>
                         </div>
 
                         <div class="mt-auto space-y-4">
                             {{-- Status & Stok --}}
                             <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-1.5 {{ $b->stok > 0 ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-rose-50 text-rose-600 border-rose-100' }} text-[9px] font-black uppercase px-3 py-1.5 rounded-xl border">
-                                    <span class="w-1.5 h-1.5 {{ $b->stok > 0 ? 'bg-emerald-500 animate-ping' : 'bg-rose-500' }} rounded-full"></span>
+                                <div
+                                    class="flex items-center gap-1.5 {{ $b->stok > 0 ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-rose-50 text-rose-600 border-rose-100' }} text-[9px] font-black uppercase px-3 py-1.5 rounded-xl border">
+                                    <span
+                                        class="w-1.5 h-1.5 {{ $b->stok > 0 ? 'bg-emerald-500' : 'bg-rose-500' }} rounded-full"></span>
                                     {{ $b->stok > 0 ? 'Tersedia: ' . $b->stok : 'Stok Habis' }}
                                 </div>
                                 <span class="text-[10px] font-black text-slate-300 uppercase">{{ $b->tahun_terbit }}</span>
@@ -114,14 +127,20 @@
                         <i class="fa-solid fa-search text-slate-200 text-2xl"></i>
                     </div>
                     <p class="text-slate-400 font-bold uppercase tracking-widest text-xs">Buku tidak ditemukan</p>
-                    <a href="{{ route('anggota.buku') }}" class="text-indigo-600 text-[10px] font-black uppercase mt-4 inline-block hover:underline">Reset Pencarian</a>
+                    <a href="{{ route('anggota.buku') }}"
+                        class="text-indigo-600 text-[10px] font-black uppercase mt-4 inline-block hover:underline">Reset
+                        Pencarian</a>
                 </div>
             @endforelse
         </div>
 
         {{-- Pagination --}}
-        <div class="mt-16">
-            {{ $buku->appends(request()->query())->links() }}
+        <div class="mt-6 flex justify-between items-center">
+            <p class="text-sm text-slate-500">
+                Menampilkan {{ $buku->firstItem() }} - {{ $buku->lastItem() }} dari {{ $buku->total() }} buku
+            </p>
+
+            {{ $buku->links() }}
         </div>
     </div>
 @endsection

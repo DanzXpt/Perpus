@@ -54,19 +54,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
 
     /*
-    |--------------------------------------------------------------------------
-    | PENGEMBALIAN BUKU (PETUGAS)
-    |--------------------------------------------------------------------------
-    */
-
-
-    /*
-    |--------------------------------------------------------------------------
+    |------------------------------  --------------------------------------------
     | ROLE KEPALA PERPUSTAKAAN
     |--------------------------------------------------------------------------
     */
     Route::middleware(isKepala::class)->group(function () {
-        Route::get('/kepala/dashboard', [KepalaController::class, 'index'])
+        Route::get('/kepala/dashboard', [KepalaController::class, 'dashboard'])
             ->name('kepala.dashboard');
 
         // AKUN PENGGUNA
@@ -185,6 +178,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/anggota/buku', [BukuController::class, 'index'])
             ->name('anggota.buku');
+
+        Route::get('/anggota/buku/{id}', [BukuController::class, 'show'])
+            ->name('anggota.buku.show');
 
         Route::post('/anggota/pinjam/{id}', [PeminjamanController::class, 'store'])
             ->name('anggota.pinjam.store');

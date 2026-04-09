@@ -13,8 +13,30 @@ class AnggotaController extends Controller
 {
     public function index()
     {
+        $today = Carbon::today();
         $userId = Auth::id();
 
+        // ambil peminjaman anggota yang lewat tanggal kembali
+        $peminjamanTerlambat = Peminjaman::where('user_id', $userId)
+            ->where('status', 'dipinjam')
+            ->whereDate('tanggal_kembali', '<', $today)
+            ->get();
+
+        // update denda dan status otomatis
+        foreach ($peminjamanTerlambat as $p) {
+
+            $hariTerlambat = Carbon::parse($p->tanggal_kembali)
+                ->diffInDays($today);
+
+            $denda = $hariTerlambat * 1000;
+
+            $p->update([
+                'status' => 'terlambat',
+                'denda' => $denda
+            ]);
+        }
+
+        // statistik anggota
         $totalPinjam = Peminjaman::where('user_id', $userId)->count();
 
         $sedangDipinjam = Peminjaman::where('user_id', $userId)
@@ -22,15 +44,15 @@ class AnggotaController extends Controller
             ->count();
 
         $terlambat = Peminjaman::where('user_id', $userId)
-            ->where('status', 'dipinjam')
-            ->where('tanggal_kembali', '<', Carbon::today())
+            ->where('status', 'terlambat')
             ->count();
 
-        $totalDenda = Peminjaman::where('user_id', $userId)->sum('denda');
+        $totalDenda = Peminjaman::where('user_id', $userId)
+            ->sum('denda');
 
         $peminjamanAktif = Peminjaman::with('buku')
             ->where('user_id', $userId)
-            ->where('status', 'dipinjam')
+            ->whereIn('status', ['dipinjam', 'terlambat'])
             ->get();
 
         return view('anggota.dashboard', compact(
@@ -48,7 +70,7 @@ class AnggotaController extends Controller
 
         if ($request->filled('search')) {
             $query->where('judul', 'like', '%' . $request->search . '%')
-                  ->orWhere('penulis', 'like', '%' . $request->search . '%');
+                ->orWhere('penulis', 'like', '%' . $request->search . '%');
         }
 
         if ($request->filled('kategori')) {

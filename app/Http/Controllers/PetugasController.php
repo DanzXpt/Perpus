@@ -16,16 +16,37 @@ class PetugasController extends Controller
      */
     public function dashboard()
     {
+        $today = Carbon::today();
+
+        // ambil peminjaman yang sudah lewat tanggal kembali
+        $peminjamanTerlambat = Peminjaman::where('status', 'dipinjam')
+            ->whereDate('tanggal_kembali', '<', $today)
+            ->get();
+
+        // update status dan denda otomatis
+        foreach ($peminjamanTerlambat as $p) {
+
+            $hariTerlambat = Carbon::parse($p->tanggal_kembali)
+                ->diffInDays($today);
+
+            $denda = $hariTerlambat * 1000;
+
+            $p->update([
+                'status' => 'terlambat',
+                'denda' => $denda
+            ]);
+        }
+
+        // statistik setelah update
         $totalBuku = Buku::count();
+
         $totalAnggota = User::where('role', 'anggota')->count();
 
         $totalDipinjam = Peminjaman::where('status', 'dipinjam')->count();
 
-        $totalTerlambat = Peminjaman::where('status', 'dipinjam')
-            ->where('tanggal_kembali', '<', Carbon::today())
-            ->count();
+        $totalTerlambat = Peminjaman::where('status', 'terlambat')->count();
 
-        $totalDenda = Peminjaman::where('status', 'kembali')->sum('denda');
+        $totalDenda = Peminjaman::sum('denda');
 
         $peminjamanTerbaru = Peminjaman::with(['user', 'buku'])
             ->latest()

@@ -31,7 +31,7 @@
                     <div class="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-2xl shadow-lg shadow-blue-200 mb-4 rotate-3">
                         <i class="fas fa-book-reader text-white text-3xl"></i>
                     </div>
-                    <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Gabung PerpusID</h2>
+                    <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Gabung E<span class=" text-indigo-600">|</span>PERPUS</h2>
                     <p class="text-slate-500 text-sm font-medium mt-1">Daftar terlebih dahulu jika belum mempunyai akun.</p>
                 </div>
 
@@ -53,7 +53,7 @@
                                 <i class="fa-solid fa-signature absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors"></i>
                                 <input type="text" name="name" required value="{{ old('name') }}"
                                     class="w-full pl-12 pr-6 py-4 bg-slate-100/50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-semibold text-slate-700 placeholder:text-slate-300" 
-                                    placeholder="Ahdan Muzaki">
+                                    placeholder="Username">
                             </div>
                         </div>
 
@@ -99,7 +99,7 @@
         </div>
 
         <p class="text-center mt-8 text-slate-400 text-[10px] font-bold uppercase tracking-[0.3em]">
-            &copy; {{ date('Y') }} PerpusID &bull; Dev by Ahdan
+            &copy; {{ date('Y') }} E|PERPUS &bull; Dev by Ahdan
         </p>
     </div>
 

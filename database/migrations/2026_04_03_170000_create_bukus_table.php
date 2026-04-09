@@ -15,10 +15,11 @@ return new class extends Migration {
             $table->string('judul');
             $table->string('penulis');
             $table->string('penerbit');
-            $table->integer('tahun_terbit');
+            $table->date('tahun_terbit')->nullable();
             $table->integer('kategori_id');
             $table->integer('stok')->default(0);
-            $table->string('cover')->nullable(); 
+            $table->string('cover')->nullable();
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }

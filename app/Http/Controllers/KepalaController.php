@@ -7,35 +7,51 @@ use App\Models\Peminjaman;
 use App\Models\User;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class KepalaController extends Controller
 {
-    public function index()
+    public function dashboard()
     {
-        // 1. Ambil data dasar
-        $totalJudulBuku = Buku::count();
-        $totalStokBuku = Buku::sum('stok');
+        $today = Carbon::today();
+
+        // ambil yang lewat tanggal kembali
+        $peminjamanTerlambat = Peminjaman::where('status', 'dipinjam')
+            ->whereDate('tanggal_kembali', '<', $today)
+            ->get();
+
+        // update status dan denda
+        foreach ($peminjamanTerlambat as $p) {
+
+            $hari = Carbon::parse($p->tanggal_kembali)
+                ->diffInDays($today);
+
+            $denda = $hari * 1000;
+
+            $p->update([
+                'status' => 'terlambat',
+                'denda' => $denda
+            ]);
+        }
+
+        // statistik setelah update
+        $totalBuku = Buku::count();
         $totalAnggota = User::where('role', 'anggota')->count();
-        $totalPinjam = Transaksi::where('status', 'dipinjam')->count();
+        $totalDipinjam = Peminjaman::where('status', 'dipinjam')->count();
+        $totalTerlambat = Peminjaman::where('status', 'terlambat')->count();
+        $totalDenda = Peminjaman::sum('denda');
 
-        // 2. HITUNG BUKU TERLAMBAT (Ini yang bikin error di baris 35 tadi)
-        // Logikanya: Status masih 'dipinjam' DAN tanggal kembali seharusnya sudah lewat dari hari ini
-        $terlambat = Transaksi::where('status', 'dipinjam')
-            ->where('tgl_kembali', '<', now()) // Sesuaikan nama kolom tanggal matimu (tgl_kembali / tgl_batas)
-            ->count();
+        $peminjamanTerbaru = Peminjaman::with(['user', 'buku'])
+            ->latest()
+            ->paginate(5);
 
-        // 3. Tembak 0 buat denda (biar aman dari error Column Not Found)
-        $totalDenda = Peminjaman::where('status', 'kembali')->sum('denda');
-
-
-        // 4. KIRIM SEMUANYA KE VIEW (WAJIB MASUK COMPACT SEMUA!)
         return view('kepala.dashboard', compact(
-            'totalJudulBuku',
-            'totalStokBuku',
+            'totalBuku',
             'totalAnggota',
-            'totalPinjam',
-            'terlambat',
-            'totalDenda'
+            'totalDipinjam',
+            'totalTerlambat',
+            'totalDenda',
+            'peminjamanTerbaru'
         ));
     }
 

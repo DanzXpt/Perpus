@@ -53,9 +53,10 @@ class BukuController extends Controller
             'judul' => 'required|string|max:255',
             'penulis' => 'required|string|max:255',
             'penerbit' => 'required|string|max:255',
-            'tahun_terbit' => 'required|integer',
+            'tahun_terbit' => 'required|date|date_format:Y-m-d',
+            'deskripsi' => 'nullable|string',
             'stok' => 'required|numeric|min:0',
-            'kategori_id' => 'required|exists:kategoris,id', 
+            'kategori_id' => 'required|exists:kategoris,id',
             'cover' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
@@ -85,37 +86,41 @@ class BukuController extends Controller
     {
         $buku = Buku::findOrFail($id);
 
-        // 1. Validasi Ketat
         $request->validate([
             'judul' => 'required|string|max:255',
             'penulis' => 'required|string|max:255',
             'penerbit' => 'required|string|max:255',
             'tahun_terbit' => 'required|integer',
             'stok' => 'required|numeric|min:0',
+            'deskripsi' => 'nullable|string',
             'kategori_id' => 'required|exists:kategoris,id',
             'cover' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-
-        // 2. Ambil semua input kecuali cover dulu
-        $data = $request->except('cover');
-
-        // 3. Logika Upload Cover
         if ($request->hasFile('cover')) {
-            // Hapus cover lama jika ada
-            if ($buku->cover && Storage::disk('public')->exists($buku->cover)) {
-                Storage::disk('public')->delete($buku->cover);
-            }
-
-            // Simpan cover baru
-            $data['cover'] = $request->file('cover')->store('covers', 'public');
+            $coverPath = $request->file('cover')->store('covers', 'public');
+            $buku->cover = $coverPath;
         }
 
-        // 4. Update Database
-        $buku->update($data);
+        $buku->update($request->only([
+            'judul',
+            'penulis',
+            'kategori_id',
+            'stok',
+            'deskripsi',
+            'penerbit',
+            'tahun_terbit'
+        ]));
 
-        return redirect()->route('petugas.buku.index')->with('success', 'Data buku berhasil diperbarui!');
+        return redirect()->route('petugas.buku.index')->with('success', 'Buku berhasil diperbarui!');
     }
+
+    public function show($id)
+    {
+        $buku = Buku::with('kategori')->findOrFail($id);
+        return view('anggota.buku.show', compact('buku'));
+    }
+
 
     // Hapus Buku
     public function destroy($id)

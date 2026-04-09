@@ -19,7 +19,9 @@ class Buku extends Model
         'password',
         'role',
         'no_telp',
-        'alamat'
+        'alamat',
+        'deskripsi'
+        
     ];
     public function peminjamans()
     {

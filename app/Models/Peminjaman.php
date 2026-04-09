@@ -17,7 +17,8 @@ class Peminjaman extends Model
         'tanggal_pinjam',
         'tanggal_kembali',
         'status',
-        'denda'
+        'denda',
+        'terlambat'
     ];
 
     public function user()
@@ -30,6 +31,12 @@ class Peminjaman extends Model
         return $this->belongsTo(Buku::class, 'buku_id');
     }
 
+    // app/Models/Peminjaman.php
+
+    public function getTerlambatAttribute()
+    {
+        return $this->denda > 0 ? 'Terlambat' : 'Tepat Waktu';
+    }
 
     protected $casts = [
         'tanggal_pinjam' => 'date',

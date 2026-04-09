@@ -88,6 +88,15 @@
                     </div>
                 </div>
 
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-slate-700">Deskripsi</label>
+                    <textarea name="deskripsi" rows="4"
+                        class="w-full px-4 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none font-bold">{{ old('deskripsi', $buku->deskripsi) }}</textarea>
+                </div>
+
+
+
+
                 <button type="submit"
                     class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all mt-4">
                     <i class="fa-solid fa-save mr-2"></i> Simpan Perubahan
