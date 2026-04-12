@@ -3,67 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Perpustakaan Digital</title>
+    <title>Login - E-Perpus Digital</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
 </head>
-<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
-
-    <div class="w-full max-w-md">
-        {{-- Logo atau Nama Perpus --}}
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-200 mb-4">
-                <i class="fas fa-book-reader text-3xl"></i>
-            </div>
-            <h1 class="text-2xl font-bold text-slate-800">Selamat Datang</h1>
-            <p class="text-slate-500 text-sm mt-1">Silakan masuk untuk akses perpustakaan</p>
-        </div>
-
-        {{-- Box Login --}}
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-            <form action="{{ route('login') }}" method="POST" class="space-y-5">
-                @csrf
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl flex overflow-hidden max-w-4xl w-full">
+            
+            <div class="hidden md:flex md:w-1/2 bg-blue-700 flex-col justify-center items-center p-12 text-center text-white relative overflow-hidden">
+                <svg class="w-24 h-24 mb-6 z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                <h2 class="text-3xl font-bold mb-2 z-10">E-PERPUS DIGITAL</h2>
+                <p class="text-blue-200 z-10">Gerbang Menuju Pengetahuan Digital Anda</p>
                 
-                {{-- Input Email --}}
-                <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Email / Username</label>
-                    <div class="relative">
-                        <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                        <input type="email" name="email" required placeholder="nama@email.com"
-                            class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-sm">
-                    </div>
-                </div>
+                <div class="absolute -bottom-32 -left-32 w-80 h-80 border-4 border-blue-500 rounded-full opacity-20"></div>
+                <div class="absolute -top-32 -right-32 w-80 h-80 border-4 border-blue-500 rounded-full opacity-20"></div>
+            </div>
 
-                {{-- Input Password --}}
-                <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Password</label>
-                    <div class="relative">
-                        <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                        <input type="password" name="password" required placeholder="••••••••"
-                            class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-sm">
-                    </div>
-                </div>
+            <div class="w-full md:w-1/2 p-8 md:p-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">Masuk Ke Akun E-Perpus Anda</h3>
 
-                <div class="text-center">
-                    <span class="text-xs text-center">Belum Mempunyai Akun <a href="http:/register" class="text-indigo-600 hover:underline ">Registrasi</a>?  Terlebih dahulu</span> 
-                </div>
-                {{-- Tombol Login --}}
-                <div class="pt-2">
-                    <button type="submit" 
-                        class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 shadow-xl shadow-indigo-100 transition-all active:scale-[0.98]">
-                        Masuk Sekarang
+                @if ($errors->any())
+                    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <ul class="list-disc pl-5 text-sm">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+                    
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Anda</label>
+                        <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                            placeholder="Masukkan email Anda">
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Kata Sandi</label>
+                        <input type="password" id="password" name="password" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                            placeholder="Masukkan kata sandi Anda">
+                    </div>
+
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="remember" name="remember" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="remember" class="ml-2 block text-sm text-gray-700">Ingat saya</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 shadow-md">
+                        MASUK
                     </button>
+                </form>
+
+                <p class="mt-6 text-center text-sm text-gray-600">
+                    Belum punya akun? 
+                    <a href="{{ route('register') }}" class="font-medium text-blue-600 hover:text-blue-500 underline">Daftar di sini</a>
+                </p>
+
+                <div class="mt-8 pt-6 border-t border-gray-100 text-center">
+                    <p class="text-xs text-gray-400">&copy; {{ date('Y') }} Sistem Informasi Perpus Digital.</p>
+                    <p class="text-xs text-gray-400 mt-1">Developed by Ahdan Muzaki</p>
                 </div>
-            </form>
+            </div>
         </div>
-
-        {{-- Footer --}}
-        <p class="text-center mt-8 text-sm text-slate-400">
-            &copy; 2026 Perpustakaan Digital - SMK RPL
-        </p>
     </div>
-
 </body>
 </html>

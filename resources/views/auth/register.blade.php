@@ -3,105 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Anggota - PerpusID</title>
-    
+    <title>Daftar - E-Perpus Digital</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    </style>
 </head>
-<body class="bg-[#f8fafc] text-slate-700 min-h-screen flex items-center justify-center p-4">
-
-    <div class="fixed inset-0 overflow-hidden -z-10">
-        <div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-blue-100/50 blur-[120px]"></div>
-        <div class="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] rounded-full bg-indigo-100/50 blur-[120px]"></div>
-    </div>
-
-    <div class="w-full max-w-[450px]">
-        <div class="bg-white/80 backdrop-blur-xl p-8 md:p-12 rounded-[3rem] shadow-2xl shadow-blue-900/5 border border-white relative overflow-hidden">
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl flex flex-row-reverse overflow-hidden max-w-4xl w-full">
             
-            <i class="fa-solid fa-user-plus absolute -right-6 -top-6 text-[120px] text-slate-50/50 -rotate-12 pointer-events-none"></i>
+            <div class="hidden md:flex md:w-1/2 bg-blue-700 flex-col justify-center items-center p-12 text-center text-white relative overflow-hidden">
+                <svg class="w-24 h-24 mb-6 z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                <h2 class="text-3xl font-bold mb-2 z-10">BERGABUNG SEKARANG</h2>
+                <p class="text-blue-200 z-10">Akses ribuan koleksi buku digital secara gratis.</p>
+                
+                <div class="absolute -bottom-20 -right-20 w-64 h-64 border-4 border-blue-500 rounded-full opacity-20"></div>
+                <div class="absolute -top-20 -left-20 w-64 h-64 border-4 border-blue-500 rounded-full opacity-20"></div>
+            </div>
 
-            <div class="relative">
-                <div class="text-center mb-10">
-                    <div class="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-2xl shadow-lg shadow-blue-200 mb-4 rotate-3">
-                        <i class="fas fa-book-reader text-white text-3xl"></i>
-                    </div>
-                    <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Gabung E<span class=" text-indigo-600">|</span>PERPUS</h2>
-                    <p class="text-slate-500 text-sm font-medium mt-1">Daftar terlebih dahulu jika belum mempunyai akun.</p>
-                </div>
+            <div class="w-full md:w-1/2 p-8 md:p-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">Daftar Akun E-Perpus Baru</h3>
 
                 @if ($errors->any())
-                    <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded-2xl">
-                        @foreach ($errors->all() as $error)
-                            <p class="text-red-600 text-[11px] font-bold uppercase tracking-tight">{{ $error }}</p>
-                        @endforeach
+                    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <ul class="list-disc pl-5 text-sm">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 @endif
 
-                <form action="{{ url('/register') }}" method="POST" class="space-y-5">
+                <form method="POST" action="{{ route('register') }}">
                     @csrf
                     
-                    <div class="space-y-4">
-                        <div class="group">
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1.5 ml-1">Nama Lengkap</label>
-                            <div class="relative">
-                                <i class="fa-solid fa-signature absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors"></i>
-                                <input type="text" name="name" required value="{{ old('name') }}"
-                                    class="w-full pl-12 pr-6 py-4 bg-slate-100/50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-semibold text-slate-700 placeholder:text-slate-300" 
-                                    placeholder="Username">
-                            </div>
-                        </div>
+                    <div class="mb-4">
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                        <input type="text" id="name" name="name" value="{{ old('name') }}" required autofocus
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                            placeholder="Masukkan nama lengkap Anda">
+                    </div>
 
-                        <div class="group">
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1.5 ml-1">Email</label>
-                            <div class="relative">
-                                <i class="fa-solid fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors"></i>
-                                <input type="email" name="email" required value="{{ old('email') }}"
-                                    class="w-full pl-12 pr-6 py-4 bg-slate-100/50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-semibold text-slate-700 placeholder:text-slate-300" 
-                                    placeholder="ahdan@example.com">
-                            </div>
-                        </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="email" name="email" value="{{ old('email') }}" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                            placeholder="Masukkan email aktif">
+                    </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="group">
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1.5 ml-1">Password</label>
-                                <input type="password" name="password" required 
-                                    class="w-full px-6 py-4 bg-slate-100/50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-semibold text-slate-700" 
-                                    placeholder="••••••••">
-                            </div>
-                            <div class="group">
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1.5 ml-1">Konfirmasi</label>
-                                <input type="password" name="password_confirmation" required 
-                                    class="w-full px-6 py-4 bg-slate-100/50 border border-transparent rounded-2xl focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-semibold text-slate-700" 
-                                    placeholder="••••••••">
-                            </div>
+                    <div class="mb-4">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Kata Sandi</label>
+                        <input type="password" id="password" name="password" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                            placeholder="Buat kata sandi">
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Kata Sandi</label>
+                        <input type="password" id="password_confirmation" name="password_confirmation" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                            placeholder="Ulangi kata sandi">
+                    </div>
+                    
+                    <div class="flex items-start mb-6">
+                        <div class="flex items-center h-5">
+                            <input id="terms" name="terms" type="checkbox" required class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="terms" class="font-medium text-gray-700">Saya setuju dengan <a href="#" class="text-blue-600 hover:underline">Syarat & Ketentuan</a> E-Perpus</label>
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-extrabold uppercase tracking-widest shadow-xl shadow-blue-200 hover:shadow-blue-300 hover:-translate-y-0.5 active:scale-[0.98] transition-all mt-4 flex items-center justify-center gap-3">
-                        <span>Daftar Sekarang</span>
-                        <i class="fa-solid fa-arrow-right-long text-xs"></i>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 shadow-md">
+                        DAFTAR SEKARANG
                     </button>
                 </form>
 
-                <div class="mt-10 pt-8 border-t border-slate-100 text-center">
-                    <p class="text-slate-400 text-[11px] font-bold uppercase tracking-[0.1em]">
-                        Sudah punya akun? 
-                        <a href="{{ route('login') }}" class="text-blue-600 hover:text-indigo-600 transition-colors ml-1 underline decoration-2 underline-offset-3">Masuk</a>
-                    </p>
+                <p class="mt-6 text-center text-sm text-gray-600">
+                    Sudah punya akun? 
+                    <a href="{{ route('login') }}" class="font-medium text-blue-600 hover:text-blue-500 underline">Masuk di sini</a>
+                </p>
+                
+                <div class="mt-8 pt-4 border-t border-gray-100 text-center">
+                    <p class="text-xs text-gray-400">&copy; {{ date('Y') }} Sistem Informasi Perpus Digital.</p>
+                    <p class="text-xs text-gray-400 mt-1">Developed by Ahdan Muzaki</p>
                 </div>
             </div>
         </div>
-
-        <p class="text-center mt-8 text-slate-400 text-[10px] font-bold uppercase tracking-[0.3em]">
-            &copy; {{ date('Y') }} E|PERPUS &bull; Dev by Ahdan
-        </p>
     </div>
-
 </body>
 </html>
