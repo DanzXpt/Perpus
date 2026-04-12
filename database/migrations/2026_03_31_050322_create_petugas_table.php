@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('petugas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('nip')->nullable();
-            $table->string('no_hp')->nullable();
+            $table->string('nip')->required();
+            $table->integer('no_hp')->nullable();
             $table->timestamps();
         });
     }

@@ -16,11 +16,11 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'nis',     
-        'kelas',  
-        'alamat',  
-        'nip',     
-        'no_hp',    
+        'nis',
+        'kelas',
+        'alamat',
+        'nip',
+        'no_hp'
     ];
 
     protected $hidden = [
@@ -45,18 +45,21 @@ class User extends Authenticatable
 
     public function anggota()
     {
-        return $this->hasOne(Anggota::class, 'user_id');
+        return $this->hasOne(Anggota::class);
     }
 
     public function petugas()
     {
-        return $this->hasOne(Petugas::class, 'user_id');
+        return $this->hasOne(Petugas::class);
     }
 
     public function kepala()
     {
-        return $this->hasOne(KepalaPerpus::class, 'user_id');
+        return $this->hasOne(KepalaPerpus::class);
     }
+
+    // app/Models/User.php
+
 
     // ============================================================
     // RELASI TRANSAKSI

@@ -90,29 +90,32 @@ class BukuController extends Controller
             'judul' => 'required|string|max:255',
             'penulis' => 'required|string|max:255',
             'penerbit' => 'required|string|max:255',
-            'tahun_terbit' => 'required|integer',
+            'tahun_terbit' => 'required|integer|min:1900|max:2030',
             'stok' => 'required|numeric|min:0',
             'deskripsi' => 'nullable|string',
             'kategori_id' => 'required|exists:kategoris,id',
             'cover' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
+        // cover update
         if ($request->hasFile('cover')) {
             $coverPath = $request->file('cover')->store('covers', 'public');
             $buku->cover = $coverPath;
         }
 
-        $buku->update($request->only([
-            'judul',
-            'penulis',
-            'kategori_id',
-            'stok',
-            'deskripsi',
-            'penerbit',
-            'tahun_terbit'
-        ]));
+        // FIX INI
+        $buku->update([
+            'judul' => $request->judul,
+            'penulis' => $request->penulis,
+            'kategori_id' => $request->kategori_id,
+            'stok' => $request->stok,
+            'deskripsi' => $request->deskripsi,
+            'penerbit' => $request->penerbit,
+            'tahun_terbit' => $request->tahun_terbit . '-01-01'
+        ]);
 
-        return redirect()->route('petugas.buku.index')->with('success', 'Buku berhasil diperbarui!');
+        return redirect()->route('petugas.buku.index')
+            ->with('success', 'Buku berhasil diperbarui!');
     }
 
     public function show($id)

@@ -8,22 +8,23 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::table('peminjamans', function (Blueprint $table) {
-            // Tambahkan kolom denda, kasih default 0 biar nggak error
-            $table->integer('denda')->default(0)->after('status');
+            $table->integer('dibayar')->default(0);
+            $table->integer('sisa_denda')->default(0);
+            $table->string('status_denda')->default('nunggak');
         });
     }
 
-    public function down(): void
+    public function down()
     {
         Schema::table('peminjamans', function (Blueprint $table) {
-            $table->dropColumn('denda');
+            $table->dropColumn([
+                'dibayar',
+                'sisa_denda',
+                'status_denda'
+            ]);
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
 };

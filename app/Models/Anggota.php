@@ -12,6 +12,14 @@ class Anggota extends Model
     // Nama tabel di database
     protected $table = 'anggota';
 
+    protected $fillable = [
+        'user_id',
+        'nis',
+        'nama_lengkap',
+        'no_telp',
+        'kelas',
+        'alamat',
+    ];
     protected $guarded = [];
 
     /**
@@ -20,7 +28,7 @@ class Anggota extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     /**

@@ -12,6 +12,8 @@ class TransaksiController extends Controller
     // tampilkan daftar transaksi
     public function index()
     {
+        $this->updateDendaOtomatis();
+        
         $transaksi = Peminjaman::with(['user', 'buku'])
             ->latest()
             ->paginate(10);
@@ -24,34 +26,59 @@ class TransaksiController extends Controller
     {
         $pinjam = Peminjaman::findOrFail($id);
 
-        $tgl_kembali = Carbon::parse($pinjam->tanggal_kembali);
-        $tgl_sekarang = Carbon::today();
+        $hariIni = Carbon::today();
+        $jatuhTempo = Carbon::parse($pinjam->jatuh_tempo);
 
         $denda = 0;
+        $telat = 0;
 
-        if ($tgl_sekarang > $tgl_kembali) {
-            $selisih_hari = $tgl_sekarang->diffInDays($tgl_kembali);
-            $denda = $selisih_hari * 1000;
+        if ($hariIni->gt($jatuhTempo)) {
+            $telat = $jatuhTempo->diffInDays($hariIni);
+            $denda = $telat * 1000;
         }
 
         $pinjam->update([
             'status' => 'kembali',
-            'tanggal_realisasi' => $tgl_sekarang,
-            'denda' => $denda
+            'tanggal_kembali' => $hariIni,
+            'denda' => $denda,
+            'dibayar' => 0,
+            'sisa_denda' => $denda,
+            'status_denda' => $denda > 0 ? 'nunggak' : 'lunas'
         ]);
 
         $pinjam->buku->increment('stok');
 
-        return back()->with('success', 'Buku berhasil dikembalikan! Denda: Rp ' . number_format($denda));
+        return back()->with(
+            'success',
+            'Terlambat ' . $telat . ' hari, Denda Rp ' . number_format($denda, 0, ',', '.')
+        );
     }
 
-    // cetak pdf
-    public function cetak()
+    public function updateDendaOtomatis()
     {
-        $transaksi = Peminjaman::with('user', 'buku')->latest()->get();
+        $today = Carbon::today();
+        $dendaPerHari = 1000;
 
-        $pdf = Pdf::loadView('petugas.transaksi.cetak', compact('transaksi'));
+        $peminjaman = Peminjaman::whereIn('status', ['dipinjam', 'terlambat'])
+            ->whereNotNull('jatuh_tempo')
+            ->get();
 
-        return $pdf->stream('laporan-transaksi.pdf');
+        foreach ($peminjaman as $p) {
+
+            $jatuhTempo = Carbon::parse($p->jatuh_tempo);
+
+            if ($today->gt($jatuhTempo)) {
+
+                $hari = $jatuhTempo->diffInDays($today);
+                $denda = $hari * $dendaPerHari;
+
+                $p->update([
+                    'status' => 'terlambat',
+                    'denda' => $denda,
+                    'sisa_denda' => $denda,
+                    'status_denda' => 'nunggak'
+                ]);
+            }
+        }
     }
 }

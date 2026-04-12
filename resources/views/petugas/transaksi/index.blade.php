@@ -7,8 +7,8 @@
         {{-- Header Card --}}
         <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex justify-between items-center">
             <div>
-                <h3 class="font-black text-slate-800 text-xl">Daftar Peminjaman</h3>
-                <p class="text-slate-400 text-sm font-medium">Kelola semua aktivitas pinjam-meminjam buku.</p>
+                <h3 class="font-black text-slate-800 text-xl">Daftar Peminjaman dan Pengembalian</h3>
+                <p class="text-slate-400 text-sm font-medium">Kelola semua aktivitas meminjam dan pengembalian buku.</p>
             </div>
             <div class="bg-indigo-50 text-indigo-600 px-6 py-2 rounded-md font-bold text-sm">
                 Total: {{ $transaksi->total() }} Data
@@ -57,7 +57,7 @@
                                 </td>
                                 <td class="p-4 text-center rounded-r-2xl">
                                     @if($item->status == 'dipinjam')
-                                        <form action="{{ route('petugas.kembali', $item->id) }}" method="POST">
+                                        <form action="{{ route('petugas.konfirmasi', $item->id) }}" method="POST">
                                             @csrf
                                             @method('PUT') <!-- wajib biar Laravel ngerti ini PUT -->
                                             <button type="submit"

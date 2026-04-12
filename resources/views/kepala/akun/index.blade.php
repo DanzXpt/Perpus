@@ -77,17 +77,22 @@
                                 <td class="px-6 py-4 text-center">
                                     <div class="text-xs font-semibold text-slate-600">
                                         @if($user->role == 'anggota' && $user->anggota)
-                                            <span class="text-slate-400 font-normal mr-1 italic">NIS:</span>
+                                            <span class="text-slate-400 italic">NIS:</span>
                                             {{ $user->anggota->nis }}
                                             <div class="text-[10px] text-indigo-400 font-bold uppercase mt-0.5">
                                                 {{ $user->anggota->kelas }}
                                             </div>
-                                        @elseif($user->role == 'petugas' && $user->petugas)
-                                            <span class="text-slate-400 font-normal mr-1 italic">NIP:</span>
-                                            {{ $user->petugas->nip_petugas ?? '-' }}
-                                        @elseif($user->role == 'kepala' && $user->kepala)
-                                            <span class="text-slate-400 font-normal mr-1 italic">NIP:</span>
-                                            {{ $user->kepala->nip_kepala ?? '-' }}
+
+                                        @elseif($user->role == 'petugas')
+                                            <span class="text-slate-400 italic">NIP:</span>
+                                            {{ $user->petugas->nip ?? '-' }}
+                                            <div class="text-[10px] text-indigo-400 font-bold uppercase mt-0.5">
+                                                {{ $user->petugas->no_hp ?? '-' }}
+                                            </div>
+
+                                        @elseif($user->role == 'kepala')
+                                            <span class="text-slate-400 italic">NIP:</span>
+                                            {{ $user->kepala->nip ?? '-' }}
                                         @else
                                             <span class="text-slate-300">-</span>
                                         @endif

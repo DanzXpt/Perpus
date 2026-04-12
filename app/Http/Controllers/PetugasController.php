@@ -16,41 +16,37 @@ class PetugasController extends Controller
      */
     public function dashboard()
     {
-        $today = Carbon::today();
+        $today = now();
 
-        // ambil peminjaman yang sudah lewat tanggal kembali
-        $peminjamanTerlambat = Peminjaman::where('status', 'dipinjam')
-            ->whereDate('tanggal_kembali', '<', $today)
+        // 🔥 update denda otomatis
+        $peminjaman = Peminjaman::where('status', 'dipinjam')
+            ->whereDate('jatuh_tempo', '<', $today)
             ->get();
 
-        // update status dan denda otomatis
-        foreach ($peminjamanTerlambat as $p) {
+        foreach ($peminjaman as $p) {
 
-            $hariTerlambat = Carbon::parse($p->tanggal_kembali)
-                ->diffInDays($today);
-
-            $denda = $hariTerlambat * 1000;
+            $hari = $today->diffInDays($p->jatuh_tempo);
+            $denda = $hari * 1000;
 
             $p->update([
                 'status' => 'terlambat',
-                'denda' => $denda
+                'denda' => $denda,
+                'sisa_denda' => $denda,
+                'status_denda' => 'nunggak'
             ]);
         }
 
-        // statistik setelah update
+        // statistik
         $totalBuku = Buku::count();
-
         $totalAnggota = User::where('role', 'anggota')->count();
-
         $totalDipinjam = Peminjaman::where('status', 'dipinjam')->count();
-
         $totalTerlambat = Peminjaman::where('status', 'terlambat')->count();
-
         $totalDenda = Peminjaman::sum('denda');
 
-        $peminjamanTerbaru = Peminjaman::with(['user', 'buku'])
+        $peminjamanTerbaru = Peminjaman::with('user', 'buku')
             ->latest()
-            ->paginate(5);
+            ->take(5)
+            ->get();
 
         return view('petugas.dashboard', compact(
             'totalBuku',
@@ -89,18 +85,19 @@ class PetugasController extends Controller
     {
         $peminjaman = Peminjaman::findOrFail($id);
 
-        $peminjaman->update([
-            'status' => 'dipinjam',
-            'tanggal_pinjam' => now(),
-            'tanggal_kembali' => now()->addDays(4)
-        ]);
+        // Pastikan stok berkurang HANYA jika status sebelumnya pending
+        if ($peminjaman->status == 'pending') {
+            $peminjaman->update(['status' => 'dipinjam']);
 
-        // kurangi stok buku
-        $peminjaman->buku->decrement('stok');
+            // AMBIL MODEL BUKUNYA
+            $buku = Buku::find($peminjaman->buku_id);
 
-        return back()->with('success', 'Pengajuan berhasil disetujui');
+            // KURANGI STOK (Perintah ini langsung simpan ke DB)
+            $buku->decrement('stok');
+        }
+
+        return back()->with('success', 'Berhasil disetujui, stok berkurang.');
     }
-
     public function tolakPengajuan($id)
     {
         $peminjaman = Peminjaman::findOrFail($id);
@@ -109,7 +106,6 @@ class PetugasController extends Controller
             'status' => 'ditolak'
         ]);
 
-        return back()->with('success', 'Pengajuan ditolak');
+        return redirect()->back()->with('success', 'Pengajuan peminjaman telah ditolak.');
     }
-
 }

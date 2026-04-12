@@ -64,15 +64,19 @@
             </div>
             
             {{-- Terlambat --}}
-            
-            <div class="bg-white p-6 rounded-[2rem] border border-red-50 shadow-sm hover:shadow-md transition-all">
-                <div class="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-4">
+            <div
+                class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4 group hover:border-red-200 transition-all duration-300 hover:shadow-lg hover:shadow-red-50/50 overflow-hidden">
+                <div
+                    class="w-14 h-14 bg-red-50 text-red-600 rounded-[1.2rem] flex items-center justify-center text-xl shrink-0 group-hover:bg-red-600 group-hover:text-white transition-all shadow-sm">
                     <i class="fas fa-clock"></i>
                 </div>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Terlambat</p>
-                <h3 class="text-2xl font-black text-red-600">{{ $totalTerlambat }} <span
-                        class="text-xs text-slate-400">Anggota</span></h3>
+                <div class="flex flex-col min-w-0">
+                    <h3 class="text-2xl font-black text-slate-800 leading-tight truncate">{{ $totalTerlambat }}</h3>
+                    <p class="text-[9px] font-black text-red-600/70 uppercase tracking-widest truncate">Terlambat</p>
+                </div>
             </div>
+            
+            
 
             {{-- Card: Total Denda --}}
             <div

@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('judul');
             $table->string('penulis');
             $table->string('penerbit');
-            $table->date('tahun_terbit')->nullable();
+            $table->integer('tahun_terbit')->nullable();
             $table->integer('kategori_id');
             $table->integer('stok')->default(0);
             $table->string('cover')->nullable();

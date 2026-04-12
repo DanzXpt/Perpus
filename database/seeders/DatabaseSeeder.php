@@ -45,9 +45,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
       Kategori::create([
-         "nama_kategori"   =>   "Aksi"
-      ]);
-      Kategori::create([
          "nama_kategori"   =>   "Fiksi"
       ]);
       Kategori::create([
@@ -55,12 +52,6 @@ class DatabaseSeeder extends Seeder
       ]);
       Kategori::create([
          "nama_kategori"   =>   "non-fiksi"
-      ]);
-      Kategori::create([
-         "nama_kategori"   =>   "Komik"   
-      ]);
-      Kategori::create([
-         "nama_kategori"   =>   "kartun"
       ]);
 
     }

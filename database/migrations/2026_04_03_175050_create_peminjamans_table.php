@@ -12,11 +12,21 @@ return new class extends Migration {
     {
         Schema::create('peminjamans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('buku_id')->constrained()->onDelete('cascade');
+            $table->string('kode_transaksi')->unique();
+            // Relasi
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('buku_id')->constrained('bukus')->onDelete('cascade');
+
+            // Data Waktu
             $table->date('tanggal_pinjam');
-            $table->date('tanggal_kembali')->nullable();
-            $table->enum('status', ['pending', 'dipinjam', 'kembali', 'ditolak', 'terlambat'])->default('pending');
+            $table->date('jatuh_tempo');
+            $table->date('tanggal_kembali')->nullable(); 
+
+            // Status & Keuangan
+            $table->enum('status', ['pending', 'dipinjam', 'kembali', 'ditolak'])->default('pending');
+            $table->integer('denda')->default(0);
+            $table->string('status_denda')->default('lunas');
+
             $table->timestamps();
         });
     }

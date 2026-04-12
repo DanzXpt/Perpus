@@ -11,16 +11,14 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Tambahkan kolom alamat dan no_telp jika belum ada
-            $table->text('alamat')->nullable()->after('email');
-            $table->string('no_telp', 15)->nullable()->after('alamat');
+            $table->string('nip')->nullable()->after('role');
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['alamat', 'no_telp']);
+            $table->dropColumn('nip');
         });
     }
 };

@@ -11,6 +11,11 @@ class Petugas extends Model
 
     // Nama tabel di database
     protected $table = 'petugas';
+    protected $fillable = [
+        'user_id',
+        'nip',
+        'no_hp',
+    ];
 
     // Kolom yang boleh diisi (Mass Assignment)
     protected $guarded = [];
@@ -21,7 +26,7 @@ class Petugas extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     /**

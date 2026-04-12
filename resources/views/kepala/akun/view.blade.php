@@ -66,10 +66,10 @@
                         <div class="flex flex-col space-y-4">
                             <div class="flex flex-col">
                                 <span class="text-[10px] text-slate-400 uppercase font-bold">NIP Petugas</span>
-                                <span class="text-sm font-bold text-slate-700">{{ $user->petugas->nip_petugas ?? '-' }}</span>
+                                <span class="text-sm font-bold text-slate-700">{{ $user->petugas->nip ?? '-' }}</span>
                             </div>
                             <div class="flex flex-col">
-                                <span class="text-[10px] text-slate-400 uppercase font-bold">No. HP / WhatsApp</span>
+                                <span class="text-[10px] text-slate-400 uppercase font-bold">No. Telp / WhatsApp</span>
                                 <span class="text-sm font-bold text-emerald-600">{{ $user->petugas->no_hp ?? '-' }}</span>
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                     @if($user->role == 'kepala' && $user->kepala)
                         <div class="flex flex-col">
                             <span class="text-[10px] text-slate-400 uppercase font-bold">NIP Kepala</span>
-                            <span class="text-sm font-bold text-slate-700">{{ $user->kepala->nip_kepala ?? '-' }}</span>
+                            <span class="text-sm font-bold text-slate-700">{{ $user->kepala->nip ?? '-' }}</span>
                         </div>
                     @endif
 

@@ -16,6 +16,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\DendaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,9 +129,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('petugas/transaksi', [TransaksiController::class, 'index'])
             ->name('petugas.transaksi.index');
 
-        Route::put('/kembali/{id}', [TransaksiController::class, 'kembalikanBuku'])
-            ->name('petugas.kembali');
-
         Route::get('/transaksi/cetak', [TransaksiController::class, 'cetak'])
             ->name('petugas.transaksi.cetak');
 
@@ -162,8 +160,17 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/petugas/pengajuan/{id}/tolak', [PetugasController::class, 'tolakPengajuan'])
             ->name('petugas.pengajuan.tolak');
 
+        Route::post('/petugas/konfirmasi/{id}', [PeminjamanController::class, 'konfirmasi'])
+            ->name('petugas.konfirmasi');
+
         Route::get('/petugas/transaksi/cetak', [TransaksiController::class, 'cetak'])
             ->name('petugas.transaksi.cetak');
+
+        Route::get('/petugas/denda', [DendaController::class, 'index'])
+            ->name('petugas.denda.index');
+
+        Route::post('/petugas/denda/bayar/{id}', [DendaController::class, 'bayar'])
+            ->name('petugas.denda.bayar');
     });
 
 

@@ -12,15 +12,24 @@ class Peminjaman extends Model
     protected $table = 'peminjamans';
 
     protected $fillable = [
+        'kode_transaksi',
         'user_id',
         'buku_id',
         'tanggal_pinjam',
+        'jatuh_tempo',
         'tanggal_kembali',
         'status',
         'denda',
-        'terlambat'
+        'dibayar',
+        'sisa_denda',
+        'status_denda'
     ];
 
+    protected $casts = [
+        'tanggal_pinjam' => 'date',
+        'jatuh_tempo' => 'date',
+        'tanggal_kembali' => 'date',
+    ];
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -38,8 +47,33 @@ class Peminjaman extends Model
         return $this->denda > 0 ? 'Terlambat' : 'Tepat Waktu';
     }
 
-    protected $casts = [
-        'tanggal_pinjam' => 'date',
-        'tanggal_kembali' => 'date',
-    ];
+    // Tambahkan ini di dalam class Peminjaman
+    // File: App\Models\Peminjaman.php
+
+    public function getStatusDendaAttribute($value)
+    {
+        // Jika sisa denda sudah 0 tapi denda awalnya ada, berarti LUNAS
+        if ($this->sisa_denda <= 0 && $this->denda > 0) {
+            return 'lunas';
+        }
+
+        // Jika masih ada sisa denda, berarti NUNGGAK
+        if ($this->sisa_denda > 0) {
+            return 'nunggak';
+        }
+
+        return $value ?? '-';
+    }
+
+    // Tambahkan atau update fungsi ini di Model Peminjaman.php
+    public function getStatusLabelAttribute()
+    {
+        // Jika masih dipinjam tapi sudah lewat jatuh tempo
+        if ($this->status === 'dipinjam' && now()->startOfDay() > \Carbon\Carbon::parse($this->jatuh_tempo)->startOfDay()) {
+            return 'TERLAMBAT';
+        }
+
+        return strtoupper($this->status);
+    }
+
 }

@@ -42,10 +42,14 @@
                     </div>
                     {{-- Tahun --}}
                     <div>
-                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Tahun
-                            Terbit</label>
-                        <input type="number" name="tahun_terbit" value="{{ old('tahun_terbit', $buku->tahun_terbit) }}"
-                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none font-bold text-slate-700">
+                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2"
+                            for="tahun_terbit">
+                            Tahun Terbit
+                        </label>
+
+                        <input type="number" name="tahun_terbit" id="tahun_terbit"
+                            value="{{ old('tahun_terbit', $buku->tahun_terbit) }}" min="1900" max="2030" placeholder="2019"
+                            class="form-control w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none font-bold text-slate-700">
                     </div>
                 </div>
 

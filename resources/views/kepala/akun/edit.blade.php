@@ -59,55 +59,53 @@
                 {{-- FORM ANGGOTA --}}
                 @if($user->role == 'anggota')
                 <div class="space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-1">
                             <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-tight">NIS *</label>
                             <input type="text" name="nis" 
-                                class="w-full px-4 py-2.5 rounded-xl border @error('nis') border-rose-500 @else border-slate-200 @enderror focus:border-indigo-500 outline-none text-sm font-bold"
-                                value="{{ old('nis', $user->anggota?->nis) }}">
-                            @error('nis') <p class="text-[10px] text-rose-500 mt-1">{{ $message }}</p> @enderror
+                            class="w-full px-4 py-3 rounded-2xl border @error('nis') border-rose-500 @else border-slate-200 @enderror focus:border-indigo-500 outline-none text-sm font-bold"
+                            value="{{ old('nis', $user->anggota?->nis) }}">
+                            @error('nis') <p class="text-[10px] text-rose-500 mt-1 ml-1">{{ $message }}</p> @enderror
                         </div>
                         <div class="space-y-1">
                             <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-tight">Kelas *</label>
                             <input type="text" name="kelas" 
-                                class="w-full px-4 py-2.5 rounded-xl border @error('kelas') border-rose-500 @else border-slate-200 @enderror focus:border-indigo-500 outline-none text-sm font-bold"
-                                value="{{ old('kelas', $user->anggota->kelas) }}">
-                            @error('kelas') <p class="text-[10px] text-rose-500 mt-1">{{ $message }}</p> @enderror
+                                class="w-full px-4 py-3 rounded-2xl border @error('kelas') border-rose-500 @else border-slate-200 @enderror focus:border-indigo-500 outline-none text-sm font-bold"
+                                value="{{ old('kelas', $user->anggota?->kelas) }}">
+                            @error('kelas') <p class="text-[10px] text-rose-500 mt-1 ml-1">{{ $message }}</p> @enderror
                         </div>
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-tight">Alamat</label>
-                        <textarea name="alamat" rows="2" 
-                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-sm">{{ old('alamat', $user->anggota?->alamat) }}</textarea>
                     </div>
                 </div>
                 @endif
 
                 {{-- FORM PETUGAS --}}
                 @if($user->role == 'petugas')
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-tight">NIP Petugas</label>
-                        <input type="text" name="nip_petugas" 
-                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold"
-                            value="{{ old('nip_petugas', $user->petugas->nip) }}">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-tight">NIP Petugas Perpus</label>
+                        <input type="text" name="nip" 
+                            class="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold"
+                            value="{{ old('nip', $user->petugas?->nip) }}">
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-tight">No. HP / WhatsApp</label>
-                        <input type="text" name="no_hp" 
-                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold text-emerald-600"
-                            value="{{ old('no_hp', $user->petugas->no_hp) }}">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-tight">No. HP Petugas Perpus</label>
+                        <input type="text" name="no_hp" oninput="this.value=this.value.replace(/[^0-9+]/g,'')" 
+                            class="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold"
+                            value="{{ old('no_hp', $user->petugas?->no_hp) }}">
                     </div>
                 </div>
                 @endif
 
                 {{-- FORM KEPALA --}}
                 @if($user->role == 'kepala')
-                <div class="space-y-1">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-tight">NIP Kepala Perpus</label>
-                    <input type="text" name="nip" 
-                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold"
-                        value="{{ old('nip_kepala', $user->kepala->nip) }}">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-tight">NIP Kepala Perpus</label>
+                        <input type="text" name="nip" 
+                            class="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold"
+                            value="{{ old('nip', $user->kepala?->nip) }}">
+                    </div>
+        
                 </div>
                 @endif
             </div>

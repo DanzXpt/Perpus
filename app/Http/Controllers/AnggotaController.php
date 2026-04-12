@@ -16,27 +16,18 @@ class AnggotaController extends Controller
         $today = Carbon::today();
         $userId = Auth::id();
 
-        // ambil peminjaman anggota yang lewat tanggal kembali
+        // cek keterlambatan (hanya update status, bukan denda)
         $peminjamanTerlambat = Peminjaman::where('user_id', $userId)
             ->where('status', 'dipinjam')
-            ->whereDate('tanggal_kembali', '<', $today)
+            ->whereDate('jatuh_tempo', '<', $today)
             ->get();
 
-        // update denda dan status otomatis
         foreach ($peminjamanTerlambat as $p) {
-
-            $hariTerlambat = Carbon::parse($p->tanggal_kembali)
-                ->diffInDays($today);
-
-            $denda = $hariTerlambat * 1000;
-
             $p->update([
-                'status' => 'terlambat',
-                'denda' => $denda
+                'status' => 'terlambat'
             ]);
         }
 
-        // statistik anggota
         $totalPinjam = Peminjaman::where('user_id', $userId)->count();
 
         $sedangDipinjam = Peminjaman::where('user_id', $userId)
@@ -48,11 +39,12 @@ class AnggotaController extends Controller
             ->count();
 
         $totalDenda = Peminjaman::where('user_id', $userId)
-            ->sum('denda');
+            ->sum('sisa_denda');
 
         $peminjamanAktif = Peminjaman::with('buku')
             ->where('user_id', $userId)
             ->whereIn('status', ['dipinjam', 'terlambat'])
+            ->latest()
             ->get();
 
         return view('anggota.dashboard', compact(
@@ -64,24 +56,28 @@ class AnggotaController extends Controller
         ));
     }
 
+
     public function buku(Request $request)
     {
         $query = Buku::with('kategori');
 
         if ($request->filled('search')) {
-            $query->where('judul', 'like', '%' . $request->search . '%')
-                ->orWhere('penulis', 'like', '%' . $request->search . '%');
+            $query->where(function ($q) use ($request) {
+                $q->where('judul', 'like', '%' . $request->search . '%')
+                    ->orWhere('penulis', 'like', '%' . $request->search . '%');
+            });
         }
 
         if ($request->filled('kategori')) {
             $query->where('kategori_id', $request->kategori);
         }
 
-        $buku = $query->paginate(10);
+        $buku = $query->latest()->paginate(10);
         $kategoris = Kategori::all();
 
         return view('anggota.buku', compact('buku', 'kategoris'));
     }
+
 
     public function pengajuan()
     {
@@ -94,28 +90,107 @@ class AnggotaController extends Controller
         return view('anggota.pengajuan.index', compact('pengajuan'));
     }
 
+
+    public function store($id)
+    {
+        $buku = Buku::findOrFail($id);
+
+        if ($buku->stok < 1) {
+            return back()->with('error', 'Stok buku habis.');
+        }
+
+        Peminjaman::create([
+            'kode_transaksi' => 'TRX-' . time(),
+            'user_id' => Auth::id(),
+            'buku_id' => $buku->id,
+            'tanggal_pinjam' => null,
+            'jatuh_tempo' => null,
+            'tanggal_kembali' => null,
+            'status' => 'pending',
+            'denda' => 0,
+            'dibayar' => 0,
+            'sisa_denda' => 0,
+            'status_denda' => null
+        ]);
+
+        return back()->with('success', 'Pengajuan berhasil, menunggu persetujuan');
+    }
+
+
     public function riwayat()
     {
         $riwayat = Peminjaman::with('buku')
             ->where('user_id', Auth::id())
-            ->whereIn('status', ['dipinjam', 'kembali'])
+            ->whereIn('status', ['dipinjam', 'kembali', 'terlambat'])
             ->latest()
             ->get();
+
+        $dendaPerHari = 1000;
+
+        foreach ($riwayat as $r) {
+
+            $jatuhTempo = Carbon::parse($r->jatuh_tempo);
+
+            if ($r->status == 'kembali') {
+
+                $tanggalKembali = Carbon::parse($r->tanggal_kembali);
+
+                if ($tanggalKembali->gt($jatuhTempo)) {
+                    $hari = $jatuhTempo->diffInDays($tanggalKembali);
+                    $r->denda = $hari * $dendaPerHari;
+                } else {
+                    $r->denda = 0;
+                }
+
+            } else {
+
+                $today = Carbon::today();
+
+                if ($today->gt($jatuhTempo)) {
+                    $hari = $jatuhTempo->diffInDays($today);
+                    $r->denda = $hari * $dendaPerHari;
+                } else {
+                    $r->denda = 0;
+                }
+            }
+        }
 
         return view('anggota.riwayat', compact('riwayat'));
     }
 
     public function kembalikan($id)
     {
-        $peminjaman = Peminjaman::findOrFail($id);
+        $p = Peminjaman::findOrFail($id);
 
-        $peminjaman->update([
+        $today = Carbon::today();
+        $jatuhTempo = Carbon::parse($p->jatuh_tempo);
+
+        $dendaPerHari = 1000;
+        $denda = 0;
+        $statusDenda = 'lunas';
+
+        if ($today->gt($jatuhTempo)) {
+
+            $hari = $jatuhTempo->diffInDays($today);
+            $denda = $hari * $dendaPerHari;
+            $statusDenda = 'nunggak';
+        }
+
+        $p->update([
+            'tanggal_kembali' => $today,
             'status' => 'kembali',
-            'tanggal_pengembalian' => now()
+            'denda' => $denda,
+            'sisa_denda' => $denda,
+            'status_denda' => $denda > 0 ? 'nunggak' : 'lunas'
         ]);
 
-        $peminjaman->buku->increment('stok');
+        $p->buku->increment('stok');
 
-        return back()->with('success', 'Buku berhasil dikembalikan');
+        return back()->with(
+            'success',
+            'Buku dikembalikan, denda Rp ' . number_format($denda)
+        );
     }
+
+
 }

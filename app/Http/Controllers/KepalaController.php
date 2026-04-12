@@ -13,45 +13,38 @@ class KepalaController extends Controller
 {
     public function dashboard()
     {
-        $today = Carbon::today();
+        $today = now();
 
-        // ambil yang lewat tanggal kembali
-        $peminjamanTerlambat = Peminjaman::where('status', 'dipinjam')
-            ->whereDate('tanggal_kembali', '<', $today)
-            ->get();
+        // 1. AUTO UPDATE TERLAMBAT
+        Peminjaman::where('status', 'dipinjam')
+            ->whereDate('jatuh_tempo', '<', $today)
+            ->each(function ($p) use ($today) {
 
-        // update status dan denda
-        foreach ($peminjamanTerlambat as $p) {
+                $hari = $today->diffInDays($p->jatuh_tempo);
 
-            $hari = Carbon::parse($p->tanggal_kembali)
-                ->diffInDays($today);
+                $denda = $hari * 1000;
 
-            $denda = $hari * 1000;
+                $p->update([
+                    'status' => 'terlambat',
+                    'denda' => $denda,
+                    'sisa_denda' => $denda,
+                    'status_denda' => 'nunggak',
+                ]);
+            });
 
-            $p->update([
-                'status' => 'terlambat',
-                'denda' => $denda
-            ]);
-        }
-
-        // statistik setelah update
+        // 2. AMBIL DATA DASHBOARD
         $totalBuku = Buku::count();
         $totalAnggota = User::where('role', 'anggota')->count();
         $totalDipinjam = Peminjaman::where('status', 'dipinjam')->count();
         $totalTerlambat = Peminjaman::where('status', 'terlambat')->count();
         $totalDenda = Peminjaman::sum('denda');
 
-        $peminjamanTerbaru = Peminjaman::with(['user', 'buku'])
-            ->latest()
-            ->paginate(5);
-
         return view('kepala.dashboard', compact(
             'totalBuku',
             'totalAnggota',
             'totalDipinjam',
             'totalTerlambat',
-            'totalDenda',
-            'peminjamanTerbaru'
+            'totalDenda'
         ));
     }
 
@@ -94,13 +87,36 @@ class KepalaController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Logika simpan perubahan data user
         $user = User::findOrFail($id);
-        $user->update($request->all());
 
-        return redirect()->route('kepala.akun.index')->with('success', 'Data berhasil diupdate!');
+        $data = $request->only([
+            'name',
+            'email',
+            'role',
+            'nip_kepala',
+            'nip_petugas'
+        ]);
+
+        // mapping nip
+        if ($request->role == 'kepala') {
+            $data['nip'] = $request->nip_kepala;
+        } elseif ($request->role == 'petugas') {
+            $data['nip'] = $request->nip_petugas;
+        }
+
+        // hapus field sementara
+        unset($data['nip_kepala'], $data['nip_petugas']);
+
+        // password optional
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
+        }
+
+        $user->update($data);
+
+        return redirect()->route('kepala.akun.index')
+            ->with('success', 'Data ' . $user->name . ' berhasil diupdate!');
     }
-
     public function create()
     {
         return view('kepala.akun.create');
@@ -131,7 +147,7 @@ class KepalaController extends Controller
             'kelas' => $request->kelas,
             'alamat' => $request->alamat,
             'nip' => $request->role == 'kepala' ? $request->nip_kepala : $request->nip_petugas,
-            'no_hp' => $request->no_hp,
+            'no_telp' => $request->no_telp,
         ]);
 
         return redirect()->route('kepala.akun.index')->with('success', 'Akun ' . $request->name . ' berhasil didaftarkan!');

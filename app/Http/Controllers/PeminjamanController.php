@@ -6,76 +6,144 @@ use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 use App\Models\Buku;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class PeminjamanController extends Controller
 {
-
-    // anggota mengajukan pinjam
-    public function store($id)
+    // Anggota mengajukan pinjam
+    public function store(Request $request, $id)
     {
         $buku = Buku::findOrFail($id);
 
-        if ($buku->stok < 1) {
-            return back()->with('error', 'Stok buku habis.');
+        // Tetap cek stok di awal agar anggota tidak bisa pencet tombol jika stok 0
+        if ($buku->stok <= 0) {
+            return redirect()->back()->with('error', 'Stok buku sedang kosong.');
         }
 
-        $peminjaman = Peminjaman::create([
-            'user_id' => Auth::id(),
-            'buku_id' => $buku->id,
-            'tanggal_pinjam' => now(),
-            'tanggal_kembali' => now()->addDays(4),
-            'status' => 'pending',
-            'denda' => 0,
-        ]);
+        try {
+            $kodeTransaksi = 'TRX-' . date('Ymd') . rand(1000, 9999);
 
-        // Kurangi stok buku
-        $buku->decrement('stok');
+            Peminjaman::create([
+                'kode_transaksi' => $kodeTransaksi,
+                'user_id' => auth()->id(),
+                'buku_id' => $id,
+                'tanggal_pinjam' => now(),
+                'jatuh_tempo' => now()->addDays(4),
+                'status' => 'pending', // Status masih pending
+                'denda' => 0,
+                'dibayar' => 0,
+                'sisa_denda' => 0,
+                'status_denda' => '-',
+            ]);
 
-        return back()->with('success', 'Buku berhasil dipinjam!');
+            // JANGAN KURANGI STOK DI SINI
+            return redirect()->back()->with('success', 'Pengajuan peminjaman dikirim. Menunggu persetujuan petugas.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal: ' . $e->getMessage());
+        }
     }
 
-    // petugas setujui
+
     public function setujui($id)
     {
-        $pinjam = Peminjaman::findOrFail($id);
-        $buku = $pinjam->buku;
+        $peminjaman = Peminjaman::findOrFail($id);
+
+        if ($peminjaman->status != 'pending') {
+            return back()->with('error', 'Pengajuan sudah diproses');
+        }
+
+        $buku = Buku::findOrFail($peminjaman->buku_id);
 
         if ($buku->stok <= 0) {
             return back()->with('error', 'Stok buku habis');
         }
 
-        $pinjam->update([
+        // ubah status
+        $peminjaman->update([
             'status' => 'dipinjam'
         ]);
 
+        // kurangi stok buku
         $buku->decrement('stok');
 
-        return back()->with('success', 'Pengajuan disetujui');
+        return back()->with('success', 'Pengajuan disetujui dan stok berkurang');
     }
 
-    // petugas tolak
+    // Petugas menolak pengajuan
     public function tolak($id)
     {
-        $pinjam = Peminjaman::findOrFail($id);
+        $peminjaman = Peminjaman::findOrFail($id);
 
-        $pinjam->update([
+        $peminjaman->update([
             'status' => 'ditolak'
         ]);
 
         return back()->with('success', 'Pengajuan ditolak');
     }
 
-    // pengembalian
-    public function kembali($id)
+    // Petugas konfirmasi pengembalian + hitung denda
+    public function konfirmasi($id)
     {
-        $pinjam = Peminjaman::findOrFail($id);
+        $peminjaman = Peminjaman::findOrFail($id);
 
-        $pinjam->update([
-            'status' => 'kembali'
-        ]);
+        $tanggalKembali = Carbon::today();
+        $jatuhTempo = Carbon::parse($peminjaman->jatuh_tempo);
 
-        $pinjam->buku->increment('stok');
+        $telat = 0;
+        $denda = 0;
 
-        return back()->with('success', 'Buku dikembalikan');
+        if ($tanggalKembali->gt($jatuhTempo)) {
+            $telat = $jatuhTempo->diffInDays($tanggalKembali);
+            $denda = $telat * 1000;
+        }
+
+        $peminjaman->status = 'kembali';
+        $peminjaman->tanggal_kembali = $tanggalKembali;
+        $peminjaman->denda = $denda;
+        $peminjaman->dibayar = 0;
+        $peminjaman->sisa_denda = $denda;
+        $peminjaman->status_denda = $denda > 0 ? 'nunggak' : 'lunas';
+
+        $peminjaman->save();
+
+        $peminjaman->bwuku->increment('stok');
+
+        return back()->with('success', 'Denda: Rp ' . number_format($denda));
+    }
+
+    // Contoh saat buku dikembalikan
+    public function kembalikanBuku($id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
+
+        if ($peminjaman->status == 'dipinjam') {
+            $peminjaman->update([
+                'status' => 'kembali',
+                'tanggal_kembali' => now()
+            ]);
+
+            // TAMBAH STOK KEMBALI
+            $buku = Buku::find($peminjaman->buku_id);
+            $buku->increment('stok');
+        }
+
+        return back()->with('success', 'Buku kembali, stok bertambah.');
+    }
+
+
+    // File: RiwayatController.php atau PeminjamanController.php
+    public function riwayat()
+    {
+        // Ambil SEMUA data peminjaman milik user ini
+        $riwayat = Peminjaman::with('buku')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get();
+
+            // dd($riwayat->pluck('status')->toArray());
+
+        return view('anggota.riwayat', compact('riwayat'));
     }
 }

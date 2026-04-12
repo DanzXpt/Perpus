@@ -12,7 +12,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('nis'); 
             $table->string('kelas');
-            $table->string('alamat')->nullable();
+            $table->integer('no_telp')->nullable();
             $table->timestamps();
         });
     }

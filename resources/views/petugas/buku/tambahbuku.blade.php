@@ -88,7 +88,7 @@
                         <div>
                             <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2" for="tahun_terbit">Tahun
                                 Terbit</label>
-                            <input type="date" name="tahun_terbit" id="tahun_terbit" value="{{ old('tahun_terbit') }}" min="1900" max="{{ date('Y-m-d') }}"  placeholder="2024"
+                            <input type="number" name="tahun_terbit" id="tahun_terbit" value="{{ old('tahun_terbit') }}" min="1900" max="2030"  placeholder="2024"
                                 class="form-control w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none font-bold text-slate-700">
                         </div>
                     </div>
@@ -102,9 +102,9 @@
 
                     {{-- Deskripsi Buku --}}
                     <div class="mb-4">
-                        <label class="block text-sm font-bold text-slate-700">Deskripsi</label>
+                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Deskripsi</label>
                         <textarea name="deskripsi" rows="4"
-                            class="w-full px-4 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none font-bold">{{ old('deskripsi') }}</textarea>
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none font-bold text-slate-700">{{ old('deskripsi') }}</textarea>
                     </div>
 
                     <div class="pt-4">
