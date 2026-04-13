@@ -16,7 +16,7 @@ class AnggotaController extends Controller
         $today = Carbon::today();
         $userId = Auth::id();
 
-        // cek keterlambatan (hanya update status, bukan denda)
+        // 🔴 UPDATE STATUS TERLAMBAT
         $peminjamanTerlambat = Peminjaman::where('user_id', $userId)
             ->where('status', 'dipinjam')
             ->whereDate('jatuh_tempo', '<', $today)
@@ -28,19 +28,37 @@ class AnggotaController extends Controller
             ]);
         }
 
+        // 🔴 TOTAL SEMUA RIWAYAT
         $totalPinjam = Peminjaman::where('user_id', $userId)->count();
 
+        // 🔴 PINJAMAN AKTIF (INI YANG BENER)
+        $jumlahPinjam = Peminjaman::where('user_id', $userId)
+            ->whereIn('status', ['pending', 'dipinjam', 'terlambat'])
+            ->count();
+
+        // 🔴 KHUSUS YANG LAGI DIPEGANG
         $sedangDipinjam = Peminjaman::where('user_id', $userId)
             ->where('status', 'dipinjam')
             ->count();
 
+        $maxPinjam = 3;
+
+        // 🔴 SISA KUOTA (biar gak minus kayak hidup)
+        $sisaPinjam = max(0, $maxPinjam - $jumlahPinjam);
+
+        // 🔴 BOLEH PINJAM ATAU ENGGAK
+        $bolehPinjam = $jumlahPinjam < $maxPinjam;
+
+        // 🔴 TERLAMBAT
         $terlambat = Peminjaman::where('user_id', $userId)
             ->where('status', 'terlambat')
             ->count();
 
+        // 🔴 DENDA
         $totalDenda = Peminjaman::where('user_id', $userId)
             ->sum('sisa_denda');
 
+        // 🔴 DATA AKTIF
         $peminjamanAktif = Peminjaman::with('buku')
             ->where('user_id', $userId)
             ->whereIn('status', ['dipinjam', 'terlambat'])
@@ -52,7 +70,9 @@ class AnggotaController extends Controller
             'sedangDipinjam',
             'terlambat',
             'totalDenda',
-            'peminjamanAktif'
+            'peminjamanAktif',
+            'sisaPinjam',
+            'bolehPinjam'
         ));
     }
 

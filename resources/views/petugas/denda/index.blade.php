@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="max-w-6xl mx-auto space-y-4 animate-fade-in">
+<div class="max-w-6xl mx-auto space-y-4 animate-fade-in" x-data="{ tab: 'nunggak' }">
 
     {{-- Header Section --}}
     <div class="flex items-center justify-between px-2">
@@ -18,6 +18,22 @@
             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Total Piutang:</p>
             <p class="text-sm font-black text-red-600">Rp{{ number_format($denda->where('status_denda', 'nunggak')->sum('sisa_denda'), 0, ',', '.') }}</p>
         </div>
+    </div>
+
+    {{-- Tab Navigation --}}
+    <div class="flex gap-2 px-2">
+        <button 
+            @click="tab = 'nunggak'" 
+            :class="tab === 'nunggak' ? 'bg-indigo-600 text-white shadow-indigo-200' : 'bg-white text-slate-500 hover:bg-slate-50'"
+            class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm border border-transparent">
+            NUNGGAK ({{ $denda->where('status_denda', 'nunggak')->count() }})
+        </button>
+        <button 
+            @click="tab = 'lunas'" 
+            :class="tab === 'lunas' ? 'bg-emerald-600 text-white shadow-emerald-200' : 'bg-white text-slate-500 hover:bg-slate-50'"
+            class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm border border-transparent">
+            LUNAS ({{ $denda->where('status_denda', 'lunas')->count() }})
+        </button>
     </div>
 
     {{-- Main Table Card --}}
@@ -38,7 +54,8 @@
 
                 <tbody class="divide-y divide-slate-100">
                     @forelse($denda as $data)
-                    <tr class="hover:bg-slate-50/50 transition-all">
+                    {{-- Row Filter Logic --}}
+                    <tr x-show="tab === '{{ $data->status_denda }}'" class="hover:bg-slate-50/50 transition-all">
                         {{-- User --}}
                         <td class="px-4 py-3">
                             <div class="flex items-center gap-2">
@@ -63,7 +80,7 @@
                             {{ number_format($data->denda,0,',','.') }}
                         </td>
 
-                        {{-- Kolom Dibayar (Ditambahkan) --}}
+                        {{-- Kolom Dibayar --}}
                         <td class="px-4 py-3 text-right text-sm text-emerald-600 font-bold">
                             {{ number_format($data->dibayar,0,',','.') }}
                         </td>
@@ -98,7 +115,12 @@
                                     </button>
                                 </form>
                                 @else
-                                <span class="text-[10px] text-slate-400 font-medium italic">Selesai</span>
+                                <div class="flex items-center gap-1 text-emerald-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span class="text-[10px] font-bold uppercase">Lunas</span>
+                                </div>
                                 @endif
                             </div>
                         </td>
@@ -114,9 +136,19 @@
     </div>
 </div>
 
+{{-- Script for Tab (Jika belum ada Alpine.js di layout utama) --}}
+<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 <style>
     .animate-fade-in { animation: fadeIn 0.3s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    
+    /* Chrome, Safari, Edge, Opera - Remove arrows from number input */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
 </style>
 
 @endsection

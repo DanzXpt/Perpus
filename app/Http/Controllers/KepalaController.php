@@ -15,36 +15,48 @@ class KepalaController extends Controller
     {
         $today = now();
 
-        // 1. AUTO UPDATE TERLAMBAT
-        Peminjaman::where('status', 'dipinjam')
+        // 1. UPDATE DENDA OTOMATIS (Biar data sinkron dengan Petugas)
+        $terlambat = Peminjaman::where('status', 'dipinjam')
             ->whereDate('jatuh_tempo', '<', $today)
-            ->each(function ($p) use ($today) {
+            ->get();
 
-                $hari = $today->diffInDays($p->jatuh_tempo);
+        foreach ($terlambat as $p) {
+            $hari = abs($today->diffInDays($p->jatuh_tempo, false));
+            $denda = intval($hari) * 1000;
 
-                $denda = $hari * 1000;
-
-                $p->update([
-                    'status' => 'terlambat',
+            \Illuminate\Support\Facades\DB::table('peminjamans')
+                ->where('id', $p->id)
+                ->update([
                     'denda' => $denda,
                     'sisa_denda' => $denda,
-                    'status_denda' => 'nunggak',
+                    'status_denda' => 'nunggak'
                 ]);
-            });
+        }
 
-        // 2. AMBIL DATA DASHBOARD
+        // 2. STATISTIK (Pastikan semua variabel di bawah ini ada)
         $totalBuku = Buku::count();
+        $totalStok = Buku::sum('stok'); // <--- INI VARIABEL YANG TADI HILANG
+        $totalUser = User::count();
         $totalAnggota = User::where('role', 'anggota')->count();
         $totalDipinjam = Peminjaman::where('status', 'dipinjam')->count();
-        $totalTerlambat = Peminjaman::where('status', 'terlambat')->count();
-        $totalDenda = Peminjaman::sum('denda');
+        $totalTerlambat = Peminjaman::where('status_denda', 'nunggak')->count();
+        $totalDenda = Peminjaman::where('status_denda', 'nunggak')->sum('sisa_denda');
 
+        $peminjamanTerbaru = Peminjaman::with('user', 'buku')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        // 3. KIRIM KE VIEW (Pastikan 'totalStok' ada di dalam list)
         return view('kepala.dashboard', compact(
             'totalBuku',
+            'totalStok',
+            'totalUser',
             'totalAnggota',
             'totalDipinjam',
             'totalTerlambat',
-            'totalDenda'
+            'totalDenda',
+            'peminjamanTerbaru'
         ));
     }
 

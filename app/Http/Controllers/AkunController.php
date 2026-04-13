@@ -169,6 +169,7 @@ class AkunController extends Controller
                     [
                         'nis' => $request->nis,
                         'kelas' => $request->kelas,
+                        'alamat' => $request->alamat,
                     ]
                 );
             } elseif ($user->role == 'petugas') {

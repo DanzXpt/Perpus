@@ -165,7 +165,7 @@
                                 </td>
 
                                 <td class="px-6 py-4 text-center">
-                                    @if($data->denda > 0)
+                                    @if($data->denda > 0)`
                                         <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-red-100 text-red-600">
                                             TERLAMBAT
                                         </span>

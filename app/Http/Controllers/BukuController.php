@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Buku;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use App\Models\Peminjaman;
 use Illuminate\Support\Facades\Storage;
 
 class BukuController extends Controller
@@ -16,12 +17,12 @@ class BukuController extends Controller
         $kategori = Kategori::all();
         $query = Buku::with('kategori');
 
-        // 1. Filter Kategori (Jalankan duluan)
+        // 🔍 FILTER KATEGORI
         if ($request->filled('kategori')) {
             $query->where('kategori_id', $request->kategori);
         }
 
-        // 2. Filter Search (Bungkus dalam function biar gak ngerusak kategori)
+        // 🔍 FILTER SEARCH
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -32,9 +33,28 @@ class BukuController extends Controller
 
         $buku = $query->latest()->paginate(12);
 
+        // 🔴 CEK ROLE ANGGOTA
         if (auth()->user()->role == 'anggota') {
-            return view('anggota.buku', compact('buku', 'kategori'));
+
+            $userId = auth()->id();
+
+            // 🔴 HITUNG PINJAMAN (PENTING)
+            $jumlahPinjam = Peminjaman::where('user_id', $userId)
+                ->whereIn('status', ['pending', 'dipinjam', 'terlambat'])
+                ->count();
+
+            $maxPinjam = 3;
+
+            $bolehPinjam = $jumlahPinjam < $maxPinjam;
+
+            return view('anggota.buku', compact(
+                'buku',
+                'kategori',
+                'bolehPinjam' // INI YANG TADI HILANG
+            ));
         }
+
+        // 🔵 PETUGAS GAK BUTUH BOLEH PINJAM
         return view('petugas.buku.index', compact('buku', 'kategori'));
     }
 
@@ -53,7 +73,7 @@ class BukuController extends Controller
             'judul' => 'required|string|max:255',
             'penulis' => 'required|string|max:255',
             'penerbit' => 'required|string|max:255',
-            'tahun_terbit' => 'required|date|date_format:Y-m-d',
+            'tahun_terbit' => 'required|integer|min:1900|max:2030',
             'deskripsi' => 'nullable|string',
             'stok' => 'required|numeric|min:0',
             'kategori_id' => 'required|exists:kategoris,id',
@@ -111,7 +131,7 @@ class BukuController extends Controller
             'stok' => $request->stok,
             'deskripsi' => $request->deskripsi,
             'penerbit' => $request->penerbit,
-            'tahun_terbit' => $request->tahun_terbit . '-01-01'
+            'tahun_terbit' => $request->tahun_terbit // ✔
         ]);
 
         return redirect()->route('petugas.buku.index')

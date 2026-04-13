@@ -13,7 +13,7 @@ class TransaksiController extends Controller
     public function index()
     {
         $this->updateDendaOtomatis();
-        
+
         $transaksi = Peminjaman::with(['user', 'buku'])
             ->latest()
             ->paginate(10);

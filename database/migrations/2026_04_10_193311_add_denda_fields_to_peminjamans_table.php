@@ -11,20 +11,23 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('peminjamans', function (Blueprint $table) {
-            $table->integer('dibayar')->default(0);
-            $table->integer('sisa_denda')->default(0);
-            $table->string('status_denda')->default('nunggak');
+
+            if (!Schema::hasColumn('peminjamans', 'sisa_denda')) {
+                $table->integer('sisa_denda')->default(0);
+            }
+
+            // status_denda SUDAH ADA → jangan ditambah lagi
         });
     }
 
     public function down()
     {
         Schema::table('peminjamans', function (Blueprint $table) {
-            $table->dropColumn([
-                'dibayar',
-                'sisa_denda',
-                'status_denda'
-            ]);
+
+            if (Schema::hasColumn('peminjamans', 'sisa_denda')) {
+                $table->dropColumn('sisa_denda');
+            }
+
         });
     }
 };

@@ -14,34 +14,65 @@ class PeminjamanController extends Controller
     // Anggota mengajukan pinjam
     public function store(Request $request, $id)
     {
+        $userId = auth()->id();
+
+        // 1. CEK DENDA (Prioritas Utama)
+        // Pastikan kolom 'sisa_denda' di DB tipenya integer/decimal dan default 0
+        $punyaDenda = Peminjaman::where('user_id', $userId)
+            ->where('sisa_denda', '>', 0)
+            ->exists();
+
+        if ($punyaDenda) {
+            return back()->with('error', 'Gagal! Kamu masih memiliki denda yang belum dibayar.');
+        }
+
         $buku = Buku::findOrFail($id);
 
-        // Tetap cek stok di awal agar anggota tidak bisa pencet tombol jika stok 0
+        // 2. CEK STOK
         if ($buku->stok <= 0) {
-            return redirect()->back()->with('error', 'Stok buku sedang kosong.');
+            return back()->with('error', 'Maaf, stok buku ini sedang habis.');
+        }
+
+        // 3. HITUNG PINJAMAN AKTIF (Limit 3)
+        $jumlahPinjam = Peminjaman::where('user_id', $userId)
+            ->whereIn('status', ['pending', 'dipinjam', 'terlambat'])
+            ->count();
+
+        if ($jumlahPinjam >= 3) {
+            return back()->with('error', 'Limit tercapai! Selesaikan pinjaman sebelumnya (max 3 buku).');
+        }
+
+        // 4. CEK DUPLIKAT
+        $sudahAda = Peminjaman::where('user_id', $userId)
+            ->where('buku_id', $id)
+            ->whereIn('status', ['pending', 'dipinjam', 'terlambat'])
+            ->exists();
+
+        if ($sudahAda) {
+            return back()->with('error', 'Kamu sudah meminjam buku ini atau sedang dalam antrean.');
         }
 
         try {
-            $kodeTransaksi = 'TRX-' . date('Ymd') . rand(1000, 9999);
+            // Generate Kode Transaksi yang unik
+            $kodeTransaksi = 'TRX-' . now()->format('YmdHis') . rand(100, 999);
 
             Peminjaman::create([
                 'kode_transaksi' => $kodeTransaksi,
-                'user_id' => auth()->id(),
+                'user_id' => $userId,
                 'buku_id' => $id,
                 'tanggal_pinjam' => now(),
-                'jatuh_tempo' => now()->addDays(4),
-                'status' => 'pending', // Status masih pending
+                'jatuh_tempo' => now()->addDays(4), // Pinjam 4 hari
+                'status' => 'pending',
                 'denda' => 0,
                 'dibayar' => 0,
                 'sisa_denda' => 0,
-                'status_denda' => '-',
+                'status_denda' => 'lunas',
             ]);
 
-            // JANGAN KURANGI STOK DI SINI
-            return redirect()->back()->with('success', 'Pengajuan peminjaman dikirim. Menunggu persetujuan petugas.');
+            return back()->with('success', 'Pengajuan berhasil dikirim! Silahkan hubungi petugas.');
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal: ' . $e->getMessage());
+            return back()->with('error', 'Gagal memproses data: ' . $e->getMessage());
         }
     }
 
@@ -108,7 +139,7 @@ class PeminjamanController extends Controller
 
         $peminjaman->save();
 
-        $peminjaman->bwuku->increment('stok');
+        $peminjaman->buku->increment('stok');
 
         return back()->with('success', 'Denda: Rp ' . number_format($denda));
     }
@@ -142,7 +173,7 @@ class PeminjamanController extends Controller
             ->latest()
             ->get();
 
-            // dd($riwayat->pluck('status')->toArray());
+        // dd($riwayat->pluck('status')->toArray());
 
         return view('anggota.riwayat', compact('riwayat'));
     }

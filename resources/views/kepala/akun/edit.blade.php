@@ -75,6 +75,15 @@
                             @error('kelas') <p class="text-[10px] text-rose-500 mt-1 ml-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
+
+                    {{-- Bagian Alamat Anggota --}}
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1 tracking-tight">Alamat Lengkap Anggota</label>
+                        <textarea name="alamat" rows="3" 
+                            class="w-full px-4 py-3 rounded-2xl border @error('alamat') border-rose-500 @else border-slate-200 @enderror focus:border-indigo-500 outline-none text-sm font-medium resize-none transition-all italic"
+                            placeholder="">{{ old('alamat', $user->anggota?->alamat) }}</textarea>
+                        @error('alamat') <p class="text-[10px] text-rose-500 mt-1 ml-1">{{ $message }}</p> @enderror
+                    </div>
                 </div>
                 @endif
 
@@ -105,7 +114,6 @@
                             class="w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold"
                             value="{{ old('nip', $user->kepala?->nip) }}">
                     </div>
-        
                 </div>
                 @endif
             </div>

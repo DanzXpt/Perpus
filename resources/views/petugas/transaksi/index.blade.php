@@ -59,7 +59,7 @@
                                     @if($item->status == 'dipinjam')
                                         <form action="{{ route('petugas.konfirmasi', $item->id) }}" method="POST">
                                             @csrf
-                                            @method('PUT') <!-- wajib biar Laravel ngerti ini PUT -->
+                                            {{-- @method('PUT') <!-- wajib biar Laravel ngerti ini PUT --> --}}
                                             <button type="submit"
                                                 class="bg-emerald-500 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase hover:bg-emerald-600 transition-all">
                                                 <i class="fa-solid fa-rotate-left mr-1"></i> konfirmasi

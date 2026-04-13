@@ -126,10 +126,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/petugas/dashboard', [PetugasController::class, 'dashboard'])
             ->name('petugas.dashboard');
 
-        Route::get('petugas/transaksi', [TransaksiController::class, 'index'])
+        Route::get('petugas/transaksi', [LaporanController::class, 'indexPetugas'])
             ->name('petugas.transaksi.index');
 
-        Route::get('/transaksi/cetak', [TransaksiController::class, 'cetak'])
+        Route::get('/transaksi/cetak', [LaporanController::class, 'peminjamanBuku'])
             ->name('petugas.transaksi.cetak');
 
         /*
@@ -162,9 +162,6 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/petugas/konfirmasi/{id}', [PeminjamanController::class, 'konfirmasi'])
             ->name('petugas.konfirmasi');
-
-        Route::get('/petugas/transaksi/cetak', [TransaksiController::class, 'cetak'])
-            ->name('petugas.transaksi.cetak');
 
         Route::get('/petugas/denda', [DendaController::class, 'index'])
             ->name('petugas.denda.index');
