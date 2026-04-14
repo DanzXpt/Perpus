@@ -139,44 +139,87 @@ class AnggotaController extends Controller
 
     public function riwayat()
     {
+        // Hapus whereIn status agar semua keputusan (ditolak/menunggu) tetap muncul
         $riwayat = Peminjaman::with('buku')
-            ->where('user_id', Auth::id())
-            ->whereIn('status', ['dipinjam', 'kembali', 'terlambat'])
+            ->where('user_id', auth()->id())
             ->latest()
             ->get();
 
         $dendaPerHari = 1000;
+        $today = \Carbon\Carbon::today();
 
         foreach ($riwayat as $r) {
+            // Cek apakah kolom jatuh_tempo ada isinya (mencegah error pada status menunggu/ditolak)
+            if ($r->jatuh_tempo) {
+                $jatuhTempo = \Carbon\Carbon::parse($r->jatuh_tempo);
 
-            $jatuhTempo = Carbon::parse($r->jatuh_tempo);
+                // Tentukan tanggal pembanding
+                $tanggalAkhir = ($r->status == 'kembali')
+                    ? \Carbon\Carbon::parse($r->tanggal_kembali)
+                    : $today;
 
-            if ($r->status == 'kembali') {
-
-                $tanggalKembali = Carbon::parse($r->tanggal_kembali);
-
-                if ($tanggalKembali->gt($jatuhTempo)) {
-                    $hari = $jatuhTempo->diffInDays($tanggalKembali);
-                    $r->denda = $hari * $dendaPerHari;
+                // Logika Hitung Denda Live
+                if ($tanggalAkhir->gt($jatuhTempo)) {
+                    $hari = $jatuhTempo->diffInDays($tanggalAkhir);
+                    $r->total_denda = $hari * $dendaPerHari;
                 } else {
-                    $r->denda = 0;
+                    $r->total_denda = 0;
                 }
-
             } else {
-
-                $today = Carbon::today();
-
-                if ($today->gt($jatuhTempo)) {
-                    $hari = $jatuhTempo->diffInDays($today);
-                    $r->denda = $hari * $dendaPerHari;
-                } else {
-                    $r->denda = 0;
-                }
+                $r->total_denda = 0;
             }
+
+            // Logika nominal pembayaran
+            $r->sudah_dibayar = ($r->denda ?? 0) - ($r->sisa_denda ?? 0);
+            $r->sisa_denda_final = max(0, $r->total_denda - $r->sudah_dibayar);
         }
 
         return view('anggota.riwayat', compact('riwayat'));
     }
+
+
+    public function denda()
+    {
+        $riwayatDenda = Peminjaman::with('buku')
+            ->where('user_id', auth()->id())
+            ->where(function ($query) {
+                $query->where('denda', '>', 0) // Denda yang sudah dicatat petugas
+                    ->orWhere('status', 'dipinjam'); // Atau masih dipinjam (potensi denda)
+            })
+            ->latest()
+            ->get();
+
+        $dendaPerHari = 1000;
+        $today = \Carbon\Carbon::today();
+
+        foreach ($riwayatDenda as $r) {
+            $jatuhTempo = \Carbon\Carbon::parse($r->jatuh_tempo);
+            $tanggalAkhir = ($r->status == 'kembali') ? \Carbon\Carbon::parse($r->tanggal_kembali) : $today;
+
+            // 1. Ambil Total Denda dari database
+            // Jika di DB masih 0 tapi sudah telat, hitung Live. Jika di DB sudah ada, pakai yang di DB.
+            $dendaLive = ($tanggalAkhir->gt($jatuhTempo)) ? $jatuhTempo->diffInDays($tanggalAkhir) * $dendaPerHari : 0;
+
+            // Gunakan nilai terbesar antara hitungan live atau yang tercatat di DB
+            $r->total_denda = max($dendaLive, ($r->denda ?? 0));
+
+            // 2. Hitung yang sudah dibayar (Total di DB - Sisa di DB)
+            $r->sudah_dibayar = ($r->denda ?? 0) - ($r->sisa_denda ?? 0);
+
+            // Pastikan tidak minus
+            if ($r->sudah_dibayar < 0)
+                $r->sudah_dibayar = 0;
+
+            // 3. Sisa Tagihan (Total Denda yang seharusnya - yang sudah dibayar)
+            $r->sisa_denda_final = $r->total_denda - $r->sudah_dibayar;
+        }
+
+        // Filter lagi: Hanya tampilkan yang benar-benar ada dendanya
+        $riwayatDenda = $riwayatDenda->where('total_denda', '>', 0);
+
+        return view('anggota.denda.index', compact('riwayatDenda'));
+    }
+
 
     public function kembalikan($id)
     {

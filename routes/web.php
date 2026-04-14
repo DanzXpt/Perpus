@@ -198,6 +198,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/anggota/kembalikan/{id}', [AnggotaController::class, 'kembalikan'])
             ->name('anggota.kembalikan');
+
+        Route::get('/anggota/denda', [AnggotaController::class, 'denda'])->name('anggota.denda.index');
     });
 
     /*

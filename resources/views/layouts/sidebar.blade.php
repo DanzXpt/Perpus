@@ -30,174 +30,107 @@
             {{ request()->routeIs($dashboardRoute)
     ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
     : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-
             <i class="fa-solid fa-house text-lg"></i>
-            <span class="font-black text-sm uppercase tracking-wide">
-                Dashboard
-            </span>
+            <span class="font-black text-sm uppercase tracking-wide">Dashboard</span>
         </a>
 
         {{-- MENU KHUSUS KEPALA --}}
         @if(Auth::user()->role == 'kepala')
-
-            <a href="{{ route('kepala.akun.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                                        {{ request()->routeIs('kepala.akun.*')
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
-            : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-
+            <a href="{{ route('kepala.akun.index') }}"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('kepala.akun.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                 <i class="fa-solid fa-users text-lg"></i>
-                <span class="font-black text-sm uppercase tracking-wide">
-                    Daftar User
-                </span>
+                <span class="font-black text-sm uppercase tracking-wide">Daftar User</span>
             </a>
-
-            <a href="{{ route('petugas.buku.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                                        {{ request()->routeIs('petugas.buku.*')
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
-            : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-
+            <a href="{{ route('petugas.buku.index') }}"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('petugas.buku.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                 <i class="fa-solid fa-box text-lg"></i>
-                <span class="font-black text-sm uppercase tracking-wide">
-                    Daftar Buku
-                </span>
+                <span class="font-black text-sm uppercase tracking-wide">Daftar Buku</span>
             </a>
-
-            <a href="{{ route('kepala.transaksi.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                                        {{ request()->routeIs('kepala.transaksi.*')
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
-            : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-
+            <a href="{{ route('kepala.transaksi.index') }}"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('kepala.transaksi.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                 <i class="fa-solid fa-clipboard-list text-lg"></i>
-                <span class="font-black text-sm uppercase tracking-wide">
-                    Transaksi
-                </span>
+                <span class="font-black text-sm uppercase tracking-wide">Transaksi</span>
             </a>
-
-            <a href="{{ route('kepala.laporan.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                                        {{ request()->routeIs('kepala.laporan.*')
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
-            : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-
+            <a href="{{ route('kepala.laporan.index') }}"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('kepala.laporan.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                 <i class="fa-solid fa-file-invoice text-lg"></i>
-                <span class="font-black text-sm uppercase tracking-wide">
-                    Laporan
-                </span>
+                <span class="font-black text-sm uppercase tracking-wide">Laporan</span>
             </a>
-
         @endif
-
 
         {{-- MENU KHUSUS PETUGAS --}}
         @if(Auth::user()->role == 'petugas')
-
-            <a href="{{ route('petugas.buku.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                                                {{ request()->routeIs('petugas.buku.*')
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
-            : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-
+            <a href="{{ route('petugas.buku.index') }}"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('petugas.buku.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                 <i class="fa-solid fa-box text-lg"></i>
-                <span class="font-black text-sm uppercase tracking-wide">
-                    Daftar Buku
-                </span>
+                <span class="font-black text-sm uppercase tracking-wide">Daftar Buku</span>
             </a>
-
-            <a href="{{ route('petugas.transaksi.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                                                {{ request()->routeIs('petugas.transaksi.index')
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
-            : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-
+            <a href="{{ route('petugas.transaksi.index') }}"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('petugas.transaksi.index') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                 <i class="fa-solid fa-clipboard-list text-lg"></i>
-                <span class="font-black text-sm uppercase tracking-wide">
-                    Transaksi Pinjam
-                </span>
+                <span class="font-black text-sm uppercase tracking-wide">Transaksi Pinjam</span>
             </a>
-
-            <a href="{{ route('petugas.denda.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                                                {{ request()->routeIs('petugas.denda.index')
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
-            : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-
-                <i class="fa-solid fa-money-bill"></i>
-
-                <span>Denda</span>
+            <a href="{{ route('petugas.denda.index') }}"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('petugas.denda.index') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                <i class="fa-solid fa-money-bill-wave text-lg"></i>
+                <span class="font-black text-sm uppercase tracking-wide">Denda</span>
             </a>
-
-            <a href="{{ route('petugas.pengajuan.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                                                {{ request()->routeIs('petugas.pengajuan.*')
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
-            : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-
+            <a href="{{ route('petugas.pengajuan.index') }}"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('petugas.pengajuan.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                 <i class="fa-solid fa-bell-concierge text-lg"></i>
-                <span class="font-black text-sm uppercase tracking-wide">
-                    Pengajuan
-                </span>
+                <span class="font-black text-sm uppercase tracking-wide">Pengajuan</span>
             </a>
-
         @endif
-
 
         {{-- MENU KHUSUS ANGGOTA --}}
         @if(Auth::user()->role == 'anggota')
-
-            <a href="{{ route('anggota.buku') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                                        {{ request()->routeIs('anggota.buku')
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
-            : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-
+            <a href="{{ route('anggota.buku') }}"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('anggota.buku') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                 <i class="fa-solid fa-book-open text-lg"></i>
-                <span class="font-black text-sm uppercase tracking-wide">
-                    Daftar Buku
-                </span>
+                <span class="font-black text-sm uppercase tracking-wide">Daftar Buku</span>
             </a>
-
-            <a href="{{ route('anggota.riwayat') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                                        {{ request()->routeIs('anggota.riwayat')
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
-            : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-
+            <a href="{{ route('anggota.riwayat') }}"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('anggota.riwayat') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                 <i class="fa-solid fa-clock-rotate-left text-lg"></i>
-                <span class="font-black text-sm uppercase tracking-wide">
-                    Riwayat Pinjam
-                </span>
+                <span class="font-black text-sm uppercase tracking-wide">Riwayat Pinjam</span>
             </a>
-
-            <a href="{{ route('anggota.pengajuan.index') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-                                        {{ request()->routeIs('anggota.pengajuan.*')
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
-            : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-
+            <a href="{{ route('anggota.pengajuan.index') }}"
+                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('anggota.pengajuan.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                 <i class="fa-solid fa-paper-plane text-lg"></i>
-                <span class="font-black text-sm uppercase tracking-wide">
-                    Pengajuan
-                </span>
+                <span class="font-black text-sm uppercase tracking-wide">Pengajuan</span>
             </a>
-
+            {{-- MENU DENDA ANGGOTA --}}
+            <a href="{{ route('anggota.denda.index') }}"
+                class="flex items-center justify-between gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('anggota.denda.index') ? 'bg-rose-600 text-white shadow-lg shadow-rose-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                <div class="flex items-center gap-4">
+                    <i class="fa-solid fa-receipt text-lg"></i>
+                    <span class="font-black text-sm uppercase tracking-wide">Riwayat Denda</span>
+                </div>
+                @php
+                    $notifDenda = \App\Models\Peminjaman::where('user_id', auth()->id())->where('sisa_denda', '>', 0)->count();
+                @endphp
+                @if($notifDenda > 0)
+                    <span class="bg-rose-500 text-white text-[10px] px-2 py-0.5 rounded-lg font-black">{{ $notifDenda }}</span>
+                @endif
+            </a>
         @endif
     </div>
 
     {{-- SECTION BAWAH --}}
     <div class="pt-6 border-t border-slate-800 space-y-1">
-
-        <a href="{{ route('profile.edit') }}" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 
-            {{ request()->routeIs('profile.edit')
-    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
-    : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-
+        <a href="{{ route('profile.edit') }}"
+            class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('profile.edit') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
             <i class="fa-solid fa-user-gear text-lg"></i>
-            <span class="font-black text-sm uppercase tracking-wide">
-                Profile Saya
-            </span>
+            <span class="font-black text-sm uppercase tracking-wide">Profile Saya</span>
         </a>
 
         <form action="{{ route('logout') }}" method="POST">
             @csrf
             <button type="submit"
                 class="w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl text-rose-400 hover:bg-rose-500/10 transition-all font-black text-sm uppercase tracking-wide text-left border-none outline-none cursor-pointer">
-
                 <i class="fa-solid fa-right-from-bracket text-lg"></i>
                 <span>Log Out</span>
             </button>
         </form>
-
     </div>
 </div>
