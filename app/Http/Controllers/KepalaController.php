@@ -15,39 +15,41 @@ class KepalaController extends Controller
     {
         $today = now();
 
-        // 1. UPDATE DENDA OTOMATIS (Biar data sinkron dengan Petugas)
-        $terlambat = Peminjaman::where('status', 'dipinjam')
+        // 1. UPDATE DATA TERLAMBAT & DENDA (Global)
+        // Ambil yang statusnya masih dipinjam tapi sudah lewat jatuh tempo
+        $peminjamanTerlambat = Peminjaman::where('status', 'dipinjam')
             ->whereDate('jatuh_tempo', '<', $today)
             ->get();
 
-        foreach ($terlambat as $p) {
+        foreach ($peminjamanTerlambat as $p) {
             $hari = abs($today->diffInDays($p->jatuh_tempo, false));
             $denda = intval($hari) * 1000;
 
-            \Illuminate\Support\Facades\DB::table('peminjamans')
-                ->where('id', $p->id)
-                ->update([
-                    'denda' => $denda,
-                    'sisa_denda' => $denda,
-                    'status_denda' => 'nunggak'
-                ]);
+            $p->update([
+                'status' => 'terlambat', // Tambahkan update status biar sinkron
+                'denda' => $denda,
+                'sisa_denda' => $denda,
+                'status_denda' => 'nunggak'
+            ]);
         }
 
-        // 2. STATISTIK (Pastikan semua variabel di bawah ini ada)
+        // 2. STATISTIK UTAMA
         $totalBuku = Buku::count();
-        $totalStok = Buku::sum('stok'); // <--- INI VARIABEL YANG TADI HILANG
+        $totalStok = Buku::sum('stok');
         $totalUser = User::count();
         $totalAnggota = User::where('role', 'anggota')->count();
+
+        // 3. STATISTIK TRANSAKSI (Untuk Monitoring Kepala)
         $totalDipinjam = Peminjaman::where('status', 'dipinjam')->count();
-        $totalTerlambat = Peminjaman::where('status_denda', 'nunggak')->count();
+        $totalTerlambat = Peminjaman::where('status', 'terlambat')->count();
         $totalDenda = Peminjaman::where('status_denda', 'nunggak')->sum('sisa_denda');
 
-        $peminjamanTerbaru = Peminjaman::with('user', 'buku')
+        // 4. AKTIVITAS TERBARU
+        $peminjamanTerbaru = Peminjaman::with(['user', 'buku'])
             ->latest()
             ->take(5)
             ->get();
 
-        // 3. KIRIM KE VIEW (Pastikan 'totalStok' ada di dalam list)
         return view('kepala.dashboard', compact(
             'totalBuku',
             'totalStok',
@@ -82,18 +84,13 @@ class KepalaController extends Controller
     {
         $user = User::findOrFail($id);
         return view('kepala.akun.view', compact('user'));
-        // (Jangan lupa buat file view/kepala/akun/view.blade.php nya nanti)
     }
-
-
-    // Tambahkan fungsi ini di dalam class KepalaController
 
     public function edit($id)
     {
         // Cari data user berdasarkan ID
         $user = User::findOrFail($id);
 
-        // Arahkan ke file view edit (pastikan filenya ada nanti)
         return view('kepala.akun.edit', compact('user'));
     }
 
@@ -119,7 +116,7 @@ class KepalaController extends Controller
         // hapus field sementara
         unset($data['nip_kepala'], $data['nip_petugas']);
 
-        // password optional
+        // password opsional
         if ($request->filled('password')) {
             $data['password'] = bcrypt($request->password);
         }
@@ -141,7 +138,6 @@ class KepalaController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
             'role' => 'required|in:anggota,petugas,kepala',
-            // Validasi opsional tergantung role
             'nis' => 'required_if:role,anggota',
             'kelas' => 'required_if:role,anggota',
             'nip_petugas' => 'required_if:role,petugas',
@@ -154,12 +150,11 @@ class KepalaController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'role' => $request->role,
-            // Data Dinamis (Kalau tidak ada di request, otomatis null di DB)
             'nis' => $request->nis,
             'kelas' => $request->kelas,
             'alamat' => $request->alamat,
             'nip' => $request->role == 'kepala' ? $request->nip_kepala : $request->nip_petugas,
-            'no_telp' => $request->no_telp,
+            'no_hp' => $request->no_hp,
         ]);
 
         return redirect()->route('kepala.akun.index')->with('success', 'Akun ' . $request->name . ' berhasil didaftarkan!');
@@ -172,8 +167,7 @@ class KepalaController extends Controller
 
     public function transaksi()
     {
-        // Ambil data peminjaman, relasikan dengan user dan buku
-        // Kita urutkan dari yang paling baru pinjam
+        // Ambil data peminjaman, relasikan dengan user dan buku urutkan dari yang paling baru pinjam
         $transaksi = Peminjaman::with(['user', 'buku'])
             ->latest()
             ->paginate(10); // Pakai paginate supaya kalau datanya banyak nggak kepanjangan

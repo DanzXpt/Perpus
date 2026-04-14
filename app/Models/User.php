@@ -29,20 +29,12 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    // Penting: Memastikan password otomatis di-hash jika pakai Laravel versi terbaru
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
 
-    // ============================================================
-    // HELPER FUNCTIONS (Biar cek role di Controller/Blade simpel)
-    // ============================================================
-
-
-    // ============================================================
     // RELASI PROFIL (TEKNIK TERPISAH)
-    // ============================================================
 
     public function anggota()
     {
@@ -59,12 +51,8 @@ class User extends Authenticatable
         return $this->hasOne(KepalaPerpus::class);
     }
 
-    // app/Models/User.php
 
-
-    // ============================================================
     // RELASI TRANSAKSI
-    // ============================================================
 
     public function peminjamans()
     {

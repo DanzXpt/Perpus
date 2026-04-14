@@ -15,7 +15,7 @@ class KepalaPerpus extends Model
         'user_id',
         'nip',
         'nama_lengkap',
-        'no_telp',
+        'no_hp',
     ];
 
     /**

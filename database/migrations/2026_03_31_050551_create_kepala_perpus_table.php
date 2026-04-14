@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('nip')->nullable();
-            $table->integer('no_telp')->nullable();
+            $table->integer('no_hp')->nullable();
             $table->timestamps();
         });
     }

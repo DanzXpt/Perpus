@@ -118,7 +118,7 @@
                 @endif
             </div>
 
-            {{-- Tombol Aksi --}}
+            {{-- Tombol Batal --}}
             <div class="flex items-center justify-between pt-6 border-t border-slate-50">
                 <a href="{{ route('kepala.akun.index') }}" class="text-sm font-bold text-slate-400 hover:text-slate-600 transition-colors">
                     <i class="fas fa-arrow-left mr-1"></i> Batalkan

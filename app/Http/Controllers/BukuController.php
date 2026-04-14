@@ -17,12 +17,12 @@ class BukuController extends Controller
         $kategori = Kategori::all();
         $query = Buku::with('kategori');
 
-        // 🔍 FILTER KATEGORI
+        // FILTER KATEGORI
         if ($request->filled('kategori')) {
             $query->where('kategori_id', $request->kategori);
         }
 
-        // 🔍 FILTER SEARCH
+        // FILTER SEARCH
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -33,12 +33,12 @@ class BukuController extends Controller
 
         $buku = $query->latest()->paginate(12);
 
-        // 🔴 CEK ROLE ANGGOTA
+        // CEK ROLE ANGGOTA
         if (auth()->user()->role == 'anggota') {
 
             $userId = auth()->id();
 
-            // 🔴 HITUNG PINJAMAN (PENTING)
+            // HITUNG PINJAMAN (PENTING)
             $jumlahPinjam = Peminjaman::where('user_id', $userId)
                 ->whereIn('status', ['pending', 'dipinjam', 'terlambat'])
                 ->count();
@@ -50,14 +50,12 @@ class BukuController extends Controller
             return view('anggota.buku', compact(
                 'buku',
                 'kategori',
-                'bolehPinjam' // INI YANG TADI HILANG
+                'bolehPinjam' 
             ));
         }
 
-        // 🔵 PETUGAS GAK BUTUH BOLEH PINJAM
         return view('petugas.buku.index', compact('buku', 'kategori'));
     }
-
 
 
     public function create()
@@ -100,7 +98,6 @@ class BukuController extends Controller
     }
 
     // Update Data Buku
-    // JANGAN LUPA tambahkan ini di paling atas file (sebelum class)
 
     public function update(Request $request, $id)
     {
@@ -123,7 +120,6 @@ class BukuController extends Controller
             $buku->cover = $coverPath;
         }
 
-        // FIX INI
         $buku->update([
             'judul' => $request->judul,
             'penulis' => $request->penulis,
@@ -131,7 +127,7 @@ class BukuController extends Controller
             'stok' => $request->stok,
             'deskripsi' => $request->deskripsi,
             'penerbit' => $request->penerbit,
-            'tahun_terbit' => $request->tahun_terbit // ✔
+            'tahun_terbit' => $request->tahun_terbit
         ]);
 
         return redirect()->route('petugas.buku.index')

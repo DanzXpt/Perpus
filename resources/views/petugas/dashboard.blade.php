@@ -3,25 +3,6 @@
 @section('content')
     <div class="p-8 bg-slate-50 min-h-screen">
 
-        {{-- Header Dashboard --}}
-        {{-- <div class="flex justify-between items-center mb-8 border-b border-slate-100 pb-6">
-            <div>
-                <h1 class="text-3xl font-black text-slate-800 tracking-tighter">Dashboard</h1>
-                <p class="text-slate-500 text-sm font-medium mt-1">Selamat datang kembali, {{ Auth::user()->name }}!</p>
-            </div>
-            <div class="flex items-center gap-6">
-                <div class="hidden md:flex flex-col items-end border-r border-slate-100 pr-6">
-                    <span class="text-xs font-bold text-slate-400 block uppercase tracking-widest">Waktu Sistem</span>
-                    <span
-                        class="text-sm font-black text-slate-700">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}</span>
-                </div>
-                <div
-                    class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-black shadow-lg shadow-blue-100 text-lg">
-                    {{ substr(Auth::user()->name, 0, 1) }}
-                </div>
-            </div>
-        </div> --}}
-
         {{-- Grid Statistik --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
             {{-- Card: Total Buku --}}
@@ -62,7 +43,7 @@
                     <p class="text-[9px] font-black text-emerald-600/70 uppercase tracking-widest truncate">Dipinjam</p>
                 </div>
             </div>
-            
+
             {{-- Terlambat --}}
             <div
                 class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4 group hover:border-red-200 transition-all duration-300 hover:shadow-lg hover:shadow-red-50/50 overflow-hidden">
@@ -75,8 +56,7 @@
                     <p class="text-[9px] font-black text-red-600/70 uppercase tracking-widest truncate">Terlambat</p>
                 </div>
             </div>
-            
-            
+
 
             {{-- Card: Total Denda --}}
             <div
@@ -88,7 +68,8 @@
                 <div class="flex flex-col min-w-0">
                     <h3 class="text-lg font-black text-slate-800 leading-tight truncate">
                         Rp{{ number_format(abs($totalDenda), 0, ',', '.') }}
-                    <p class="text-[9px] font-black text-amber-600/70 uppercase tracking-widest truncate">Total Denda</p>
+                        <p class="text-[9px] font-black text-amber-600/70 uppercase tracking-widest truncate">Total Denda
+                        </p>
                 </div>
             </div>
         </div>
@@ -125,7 +106,8 @@
                                 <tr class="hover:bg-slate-50/50 transition-all">
                                     <td class="px-8 py-5 text-[10px] font-bold text-slate-400">#PJM-{{ $item->id }}</td>
                                     <td class="px-6 py-5 text-xs font-black text-slate-800 uppercase">
-                                        {{ Str::limit($item->user->name, 15) }}</td>
+                                        {{ Str::limit($item->user->name, 15) }}
+                                    </td>
                                     <td class="px-6 py-5 text-xs font-bold text-slate-700">
                                         <div class="max-w-[180px] truncate">{{ $item->buku->judul }}</div>
                                     </td>

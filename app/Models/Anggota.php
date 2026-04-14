@@ -16,7 +16,7 @@ class Anggota extends Model
         'user_id',
         'nis',
         'nama_lengkap',
-        'no_telp',
+        'no_hp',
         'kelas',
         'alamat',
     ];
@@ -40,11 +40,4 @@ class Anggota extends Model
         return $this->hasMany(Peminjaman::class, 'anggota_id');
     }
 
-    /**
-     * Relasi ke Koleksi Pribadi (Buku Favorit)
-     */
-    // public function koleksis()
-    // {
-    //     return $this->hasMany(KoleksiPribadi::class, 'anggota_id');
-    // }
 }

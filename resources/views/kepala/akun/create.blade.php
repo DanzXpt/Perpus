@@ -139,7 +139,7 @@
             container.classList.remove('hidden');
             if (val === 'anggota') {
                 fAnggota.classList.remove('hidden');
-                fAnggota.classList.add('grid'); // Pastikan grid jalan
+                fAnggota.classList.add('grid');
             } else if (val === 'petugas' || val === 'kepala') {
                 fPegawai.classList.remove('hidden');
                 fPegawai.classList.add('grid');

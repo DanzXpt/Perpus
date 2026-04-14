@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AkunController extends Controller
 {
-    // ===============================
     // LIST AKUN
-    // ===============================
     public function index()
     {
         $users = User::with(['anggota', 'petugas', 'kepala'])
@@ -24,17 +22,13 @@ class AkunController extends Controller
         return view('kepala.akun.index', compact('users'));
     }
 
-    // ===============================
     // FORM CREATE
-    // ===============================
     public function create()
     {
         return view('kepala.akun.create');
     }
 
-    // ===============================
     // STORE
-    // ===============================
     public function store(Request $request)
     {
         $rules = [
@@ -111,9 +105,7 @@ class AkunController extends Controller
         }
     }
 
-    // ===============================
     // EDIT
-    // ===============================
     public function edit($id)
     {
         $user = User::with(['anggota', 'petugas', 'kepala'])
@@ -122,26 +114,22 @@ class AkunController extends Controller
         return view('kepala.akun.edit', compact('user'));
     }
 
-    // ===============================
-    // UPDATE (FIXED LOGIC)
-    // ===============================
     public function update(Request $request, $id)
     {
-
         $user = User::findOrFail($id);
 
-        // Validasi Email agar tidak bentrok dengan diri sendiri
+        // 1. Validasi Dasar & Tambahan berdasarkan role
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
+            'alamat' => 'nullable|string', // Validasi alamat untuk semua role
         ];
 
-        // Validasi tambahan berdasarkan role
         if ($user->role == 'anggota') {
             $rules['nis'] = 'required|unique:anggota,nis,' . ($user->anggota->id ?? 'null');
             $rules['kelas'] = 'required';
         } elseif ($user->role == 'petugas') {
-            $rules['nip'] = 'nullable|unique:petugas,nip,' . optional($user->petugas)->id;
+            $rules['nip'] = 'nullable|unique:petugas,nip,' . ($user->petugas->id ?? 'null');
         } elseif ($user->role == 'kepala') {
             $rules['nip'] = 'nullable|unique:kepala_perpus,nip,' . ($user->kepala->id ?? 'null');
         }
@@ -151,25 +139,28 @@ class AkunController extends Controller
         DB::beginTransaction();
 
         try {
-            // 1. Update Tabel Users
-            $user->update([
+            // 2. Update Tabel Users (Termasuk Alamat)
+            $userData = [
                 'name' => $request->name,
                 'email' => $request->email,
-            ]);
+                'alamat' => $request->alamat, // Alamat disimpan di tabel users agar semua role punya
+            ];
 
-            // 2. Update Password jika diisi
+            // Update Password jika diisi
             if ($request->filled('password')) {
-                $user->update(['password' => Hash::make($request->password)]);
+                $userData['password'] = Hash::make($request->password);
             }
 
-            // 3. Update Tabel Relasi (Gunakan updateOrCreate untuk keamanan data)
+            $user->update($userData);
+
+            // 3. Update Tabel Relasi (Sesuai Role)
             if ($user->role == 'anggota') {
                 $user->anggota()->updateOrCreate(
                     ['user_id' => $user->id],
                     [
                         'nis' => $request->nis,
                         'kelas' => $request->kelas,
-                        'alamat' => $request->alamat,
+                        // 'alamat' tidak perlu di sini jika sudah di tabel users
                     ]
                 );
             } elseif ($user->role == 'petugas') {
@@ -203,9 +194,7 @@ class AkunController extends Controller
         }
     }
 
-    // ===============================
     // DELETE
-    // ===============================
     public function destroy($id)
     {
         DB::beginTransaction();

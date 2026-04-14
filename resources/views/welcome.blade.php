@@ -5,21 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selamat Datang - PerpusDigital</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
 </head>
 
-<body class="bg-gradient-to-r from-indigo-600 to-cyan-600 bg-slate-50 flex items-center justify-center min-h-screen p-6">
+<body
+    class="bg-gradient-to-r from-indigo-600 to-cyan-600 bg-slate-50 flex items-center justify-center min-h-screen p-6">
 
     <div
         class="relative text-center bg-slate-800 px-12 md:px-24 py-20 rounded-[3rem] shadow-md shadow-slate-100 overflow-hidden w-full max-w-2xl">
 
-        {{-- icon besar  --}}
+        {{-- icon besar --}}
         <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
             <i class="fa-solid fa-book-bookmark text-[300px] text-white opacity-[0.03] -rotate-12"></i>
         </div>
 
-        {{-- icon kecil  --}}
+        {{-- icon kecil --}}
         <div class="relative z-10">
             <div class="w-16 h-16 bg-indigo-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <i class="fa-solid fa-book-open text-2xl text-indigo-400"></i>

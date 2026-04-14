@@ -163,8 +163,6 @@ class PeminjamanController extends Controller
         return back()->with('success', 'Buku kembali, stok bertambah.');
     }
 
-
-    // File: RiwayatController.php atau PeminjamanController.php
     public function riwayat()
     {
         // Ambil SEMUA data peminjaman milik user ini

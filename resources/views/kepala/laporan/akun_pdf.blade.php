@@ -49,22 +49,28 @@
             </tr>
         </thead>
 
-        {{-- @php $no = 1; @endphp --}}
         <tbody>
-            @foreach ($user as $user )
-            <tr>
-                <td class="">{{ $loop->iteration }}</td>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td>{{ ucfirst($user->role) }}</td>
-                <td>
-                    @if($user->role == 'anggota')
-                    {{ $user->nis ?? '-' }}
-                    @else
-                    {{ $user->nip ?? '-' }}
-                    @endif
-                </td>
-            </tr>
+            @foreach ($user as $user)
+                <tr>
+                    <td class="">{{ $loop->iteration }}</td>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ ucfirst($user->role) }}</td>
+                    <td>
+                        @if($user->role == 'anggota')
+                            {{-- Ambil NIS dari relasi anggota --}}
+                            {{ $user->anggota->nis ?? '-' }}
+                        @elseif($user->role == 'petugas')
+                            {{-- Ambil NIP dari relasi petugas --}}
+                            {{ $user->petugas->nip ?? '-' }}
+                        @elseif($user->role == 'kepala')
+                            {{-- Ambil NIP dari relasi kepala --}}
+                            {{ $user->kepala->nip ?? '-' }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                </tr>
             @endforeach
         </tbody>
     </table>

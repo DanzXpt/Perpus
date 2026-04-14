@@ -21,24 +21,30 @@
                 <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-8 text-center">
                     <div class="relative inline-block mb-6">
                         {{-- Logika Foto Profil --}}
-                        <div class="w-32 h-32 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-full flex items-center justify-center text-white shadow-2xl shadow-blue-200 border-4 border-white overflow-hidden">
+                        <div
+                            class="w-32 h-32 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-full flex items-center justify-center text-white shadow-2xl shadow-blue-200 border-4 border-white overflow-hidden">
                             @if(Auth::user()->foto)
-                                <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Foto Profil" class="w-full h-full object-cover">
+                                <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Foto Profil"
+                                    class="w-full h-full object-cover">
                             @else
                                 <span class="font-black text-5xl">{{ substr(Auth::user()->name, 0, 1) }}</span>
                             @endif
                         </div>
-                        <div class="absolute bottom-1 right-1 w-8 h-8 bg-emerald-500 border-4 border-white rounded-full shadow-sm"></div>
+                        <div
+                            class="absolute bottom-1 right-1 w-8 h-8 bg-emerald-500 border-4 border-white rounded-full shadow-sm">
+                        </div>
                     </div>
 
                     <h3 class="text-2xl font-black text-slate-800 tracking-tight">{{ Auth::user()->name }}</h3>
                     <p class="text-slate-400 font-bold text-sm mb-6">{{ Auth::user()->email }}</p>
 
                     <div class="flex flex-col gap-2">
-                        <div class="px-4 py-3 bg-blue-50 text-blue-600 rounded-2xl text-xs font-black uppercase tracking-widest border border-blue-100 flex items-center justify-center gap-2">
+                        <div
+                            class="px-4 py-3 bg-blue-50 text-blue-600 rounded-2xl text-xs font-black uppercase tracking-widest border border-blue-100 flex items-center justify-center gap-2">
                             <i class="fas fa-user-shield"></i> {{ ucfirst(Auth::user()->role) }}
                         </div>
-                        <div class="px-4 py-3 bg-slate-50 text-slate-500 rounded-2xl text-xs font-black uppercase tracking-widest border border-slate-100 flex items-center justify-center gap-2">
+                        <div
+                            class="px-4 py-3 bg-slate-50 text-slate-500 rounded-2xl text-xs font-black uppercase tracking-widest border border-slate-100 flex items-center justify-center gap-2">
                             <i class="fas fa-calendar-alt"></i> Bergabung:
                             {{ Auth::user()->created_at ? Auth::user()->created_at->format('M Y') : '-' }}
                         </div>
@@ -65,43 +71,55 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {{-- Input Upload Foto --}}
                             <div class="col-span-2 mb-4">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
                                     <i class="fas fa-camera text-[8px]"></i> Ganti Foto Profil
                                 </label>
-                                <input type="file" name="foto" class="w-full mt-2 px-6 py-3 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl text-sm font-bold text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-blue-600 file:text-white hover:file:bg-blue-700">
-                                @error('foto') <p class="text-rose-500 text-[10px] font-bold mt-1 ml-1">{{ $message }}</p> @enderror
+                                <input type="file" name="foto"
+                                    class="w-full mt-2 px-6 py-3 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl text-sm font-bold text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-blue-600 file:text-white hover:file:bg-blue-700">
+                                @error('foto') <p class="text-rose-500 text-[10px] font-bold mt-1 ml-1">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div class="col-span-2">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
                                     <i class="fas fa-user text-[8px]"></i> Nama Lengkap <span class="text-rose-500">*</span>
                                 </label>
-                                <input type="text" name="name" value="{{ Auth::user()->name }}" class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
+                                <input type="text" name="name" value="{{ Auth::user()->name }}"
+                                    class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
                             </div>
 
                             <div>
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
                                     <i class="fas fa-envelope text-[8px]"></i> Email <span class="text-rose-500">*</span>
                                 </label>
-                                <input type="email" name="email" value="{{ Auth::user()->email }}" class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
+                                <input type="email" name="email" value="{{ Auth::user()->email }}"
+                                    class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
                             </div>
 
                             <div>
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
                                     <i class="fas fa-phone text-[8px]"></i> Nomor Telepon
                                 </label>
-                                <input type="text" name="no_hp" value="{{ Auth::user()->no_hp }}" class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
+                                <input type="text" name="no_hp" value="{{ Auth::user()->no_hp }}"
+                                    class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
                             </div>
 
                             <div class="col-span-2">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
                                     <i class="fas fa-map-marker-alt text-[8px]"></i> Alamat Lengkap
                                 </label>
-                                <textarea name="alamat" rows="3" class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">{{ Auth::user()->alamat }}</textarea>
+                                <textarea name="alamat" rows="3"
+                                    class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">{{ Auth::user()->alamat }}</textarea>
                             </div>
                         </div>
 
-                        <button type="submit" class="mt-8 px-8 py-4 bg-blue-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 flex items-center gap-3">
+                        <button type="submit"
+                            class="mt-8 px-8 py-4 bg-blue-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 flex items-center gap-3">
                             <i class="fas fa-save"></i> Perbarui Profil
                         </button>
                     </form>
@@ -121,28 +139,37 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
                             <div class="col-span-2">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
-                                    <i class="fas fa-unlock text-[8px]"></i> Password Saat Ini <span class="text-rose-500">*</span>
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                    <i class="fas fa-unlock text-[8px]"></i> Password Saat Ini <span
+                                        class="text-rose-500">*</span>
                                 </label>
-                                <input type="password" name="current_password" class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-amber-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
+                                <input type="password" name="current_password"
+                                    class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-amber-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
                             </div>
 
                             <div>
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
                                     <i class="fas fa-key text-[8px]"></i> Password Baru <span class="text-rose-500">*</span>
                                 </label>
-                                <input type="password" name="password" placeholder="Min. 6 karakter" minlength="6" class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-amber-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
+                                <input type="password" name="password" placeholder="Min. 6 karakter" minlength="6"
+                                    class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-amber-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
                             </div>
 
                             <div>
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
-                                    <i class="fas fa-redo text-[8px]"></i> Konfirmasi Baru <span class="text-rose-500">*</span>
+                                <label
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                                    <i class="fas fa-redo text-[8px]"></i> Konfirmasi Baru <span
+                                        class="text-rose-500">*</span>
                                 </label>
-                                <input type="password" name="password_confirmation" class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-amber-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
+                                <input type="password" name="password_confirmation"
+                                    class="w-full mt-2 px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-amber-500 focus:bg-white transition-all rounded-2xl focus:ring-0 font-bold text-slate-700">
                             </div>
                         </div>
 
-                        <button type="submit" class="mt-8 px-8 py-4 bg-amber-500 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-amber-600 transition-all shadow-lg shadow-amber-100 flex items-center gap-3">
+                        <button type="submit"
+                            class="mt-8 px-8 py-4 bg-amber-500 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-amber-600 transition-all shadow-lg shadow-amber-100 flex items-center gap-3">
                             <i class="fas fa-lock"></i> Update Password
                         </button>
                     </form>

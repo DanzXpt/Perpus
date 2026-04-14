@@ -11,12 +11,15 @@ use Carbon\Carbon;
 
 class AnggotaController extends Controller
 {
+    /**
+     * Tampilkan Dashboard Anggota
+     */
     public function index()
     {
         $today = Carbon::today();
         $userId = Auth::id();
 
-        // 🔴 UPDATE STATUS TERLAMBAT
+        // Update status ke terlambat jika melewati jatuh tempo secara otomatis
         $peminjamanTerlambat = Peminjaman::where('user_id', $userId)
             ->where('status', 'dipinjam')
             ->whereDate('jatuh_tempo', '<', $today)
@@ -28,37 +31,31 @@ class AnggotaController extends Controller
             ]);
         }
 
-        // 🔴 TOTAL SEMUA RIWAYAT
+        // Statistik Peminjaman Pribadi
         $totalPinjam = Peminjaman::where('user_id', $userId)->count();
 
-        // 🔴 PINJAMAN AKTIF (INI YANG BENER)
+        // Menghitung jumlah peminjaman aktif untuk validasi kuota
         $jumlahPinjam = Peminjaman::where('user_id', $userId)
             ->whereIn('status', ['pending', 'dipinjam', 'terlambat'])
             ->count();
 
-        // 🔴 KHUSUS YANG LAGI DIPEGANG
         $sedangDipinjam = Peminjaman::where('user_id', $userId)
             ->where('status', 'dipinjam')
             ->count();
 
+        // Konfigurasi Batas Pinjam
         $maxPinjam = 3;
-
-        // 🔴 SISA KUOTA (biar gak minus kayak hidup)
         $sisaPinjam = max(0, $maxPinjam - $jumlahPinjam);
-
-        // 🔴 BOLEH PINJAM ATAU ENGGAK
         $bolehPinjam = $jumlahPinjam < $maxPinjam;
 
-        // 🔴 TERLAMBAT
         $terlambat = Peminjaman::where('user_id', $userId)
             ->where('status', 'terlambat')
             ->count();
 
-        // 🔴 DENDA
         $totalDenda = Peminjaman::where('user_id', $userId)
             ->sum('sisa_denda');
 
-        // 🔴 DATA AKTIF
+        // Daftar peminjaman aktif untuk ditampilkan di tabel dashboard
         $peminjamanAktif = Peminjaman::with('buku')
             ->where('user_id', $userId)
             ->whereIn('status', ['dipinjam', 'terlambat'])
@@ -76,11 +73,14 @@ class AnggotaController extends Controller
         ));
     }
 
-
+    /**
+     * Tampilkan Daftar Buku dengan Fitur Search & Filter
+     */
     public function buku(Request $request)
     {
         $query = Buku::with('kategori');
 
+        // Pencarian berdasarkan Judul atau Penulis
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('judul', 'like', '%' . $request->search . '%')
@@ -88,6 +88,7 @@ class AnggotaController extends Controller
             });
         }
 
+        // Filter berdasarkan Kategori
         if ($request->filled('kategori')) {
             $query->where('kategori_id', $request->kategori);
         }
@@ -98,7 +99,9 @@ class AnggotaController extends Controller
         return view('anggota.buku', compact('buku', 'kategoris'));
     }
 
-
+    /**
+     * Tampilkan Pengajuan yang sedang menunggu persetujuan
+     */
     public function pengajuan()
     {
         $pengajuan = Peminjaman::with('buku')
@@ -110,7 +113,9 @@ class AnggotaController extends Controller
         return view('anggota.pengajuan.index', compact('pengajuan'));
     }
 
-
+    /**
+     * Simpan Pengajuan Peminjaman Baru
+     */
     public function store($id)
     {
         $buku = Buku::findOrFail($id);
@@ -133,32 +138,27 @@ class AnggotaController extends Controller
             'status_denda' => null
         ]);
 
-        return back()->with('success', 'Pengajuan berhasil, menunggu persetujuan');
+        return back()->with('success', 'Pengajuan berhasil dikirim. Silakan tunggu konfirmasi petugas.');
     }
 
-
+    /**
+     * Tampilkan Seluruh Riwayat Transaksi Anggota
+     */
     public function riwayat()
     {
-        // Hapus whereIn status agar semua keputusan (ditolak/menunggu) tetap muncul
         $riwayat = Peminjaman::with('buku')
             ->where('user_id', auth()->id())
             ->latest()
             ->get();
 
         $dendaPerHari = 1000;
-        $today = \Carbon\Carbon::today();
+        $today = Carbon::today();
 
         foreach ($riwayat as $r) {
-            // Cek apakah kolom jatuh_tempo ada isinya (mencegah error pada status menunggu/ditolak)
             if ($r->jatuh_tempo) {
-                $jatuhTempo = \Carbon\Carbon::parse($r->jatuh_tempo);
+                $jatuhTempo = Carbon::parse($r->jatuh_tempo);
+                $tanggalAkhir = ($r->status == 'kembali') ? Carbon::parse($r->tanggal_kembali) : $today;
 
-                // Tentukan tanggal pembanding
-                $tanggalAkhir = ($r->status == 'kembali')
-                    ? \Carbon\Carbon::parse($r->tanggal_kembali)
-                    : $today;
-
-                // Logika Hitung Denda Live
                 if ($tanggalAkhir->gt($jatuhTempo)) {
                     $hari = $jatuhTempo->diffInDays($tanggalAkhir);
                     $r->total_denda = $hari * $dendaPerHari;
@@ -169,7 +169,6 @@ class AnggotaController extends Controller
                 $r->total_denda = 0;
             }
 
-            // Logika nominal pembayaran
             $r->sudah_dibayar = ($r->denda ?? 0) - ($r->sisa_denda ?? 0);
             $r->sisa_denda_final = max(0, $r->total_denda - $r->sudah_dibayar);
         }
@@ -177,66 +176,54 @@ class AnggotaController extends Controller
         return view('anggota.riwayat', compact('riwayat'));
     }
 
-
+    /**
+     * Tampilkan Daftar Denda yang Harus Dibayar
+     */
     public function denda()
     {
         $riwayatDenda = Peminjaman::with('buku')
             ->where('user_id', auth()->id())
             ->where(function ($query) {
-                $query->where('denda', '>', 0) // Denda yang sudah dicatat petugas
-                    ->orWhere('status', 'dipinjam'); // Atau masih dipinjam (potensi denda)
+                $query->where('denda', '>', 0)
+                    ->orWhere('status', 'dipinjam');
             })
             ->latest()
             ->get();
 
         $dendaPerHari = 1000;
-        $today = \Carbon\Carbon::today();
+        $today = Carbon::today();
 
         foreach ($riwayatDenda as $r) {
-            $jatuhTempo = \Carbon\Carbon::parse($r->jatuh_tempo);
-            $tanggalAkhir = ($r->status == 'kembali') ? \Carbon\Carbon::parse($r->tanggal_kembali) : $today;
+            $jatuhTempo = Carbon::parse($r->jatuh_tempo);
+            $tanggalAkhir = ($r->status == 'kembali') ? Carbon::parse($r->tanggal_kembali) : $today;
 
-            // 1. Ambil Total Denda dari database
-            // Jika di DB masih 0 tapi sudah telat, hitung Live. Jika di DB sudah ada, pakai yang di DB.
             $dendaLive = ($tanggalAkhir->gt($jatuhTempo)) ? $jatuhTempo->diffInDays($tanggalAkhir) * $dendaPerHari : 0;
-
-            // Gunakan nilai terbesar antara hitungan live atau yang tercatat di DB
             $r->total_denda = max($dendaLive, ($r->denda ?? 0));
-
-            // 2. Hitung yang sudah dibayar (Total di DB - Sisa di DB)
-            $r->sudah_dibayar = ($r->denda ?? 0) - ($r->sisa_denda ?? 0);
-
-            // Pastikan tidak minus
-            if ($r->sudah_dibayar < 0)
-                $r->sudah_dibayar = 0;
-
-            // 3. Sisa Tagihan (Total Denda yang seharusnya - yang sudah dibayar)
+            $r->sudah_dibayar = max(0, ($r->denda ?? 0) - ($r->sisa_denda ?? 0));
             $r->sisa_denda_final = $r->total_denda - $r->sudah_dibayar;
         }
 
-        // Filter lagi: Hanya tampilkan yang benar-benar ada dendanya
+        // Hanya tampilkan data yang benar-benar memiliki sisa denda
         $riwayatDenda = $riwayatDenda->where('total_denda', '>', 0);
 
         return view('anggota.denda.index', compact('riwayatDenda'));
     }
 
-
+    /**
+     * Fitur Pengembalian Buku Mandiri
+     */
     public function kembalikan($id)
     {
         $p = Peminjaman::findOrFail($id);
-
         $today = Carbon::today();
         $jatuhTempo = Carbon::parse($p->jatuh_tempo);
 
         $dendaPerHari = 1000;
         $denda = 0;
-        $statusDenda = 'lunas';
 
         if ($today->gt($jatuhTempo)) {
-
             $hari = $jatuhTempo->diffInDays($today);
             $denda = $hari * $dendaPerHari;
-            $statusDenda = 'nunggak';
         }
 
         $p->update([
@@ -247,13 +234,12 @@ class AnggotaController extends Controller
             'status_denda' => $denda > 0 ? 'nunggak' : 'lunas'
         ]);
 
+        // Kembalikan stok buku
         $p->buku->increment('stok');
 
         return back()->with(
             'success',
-            'Buku dikembalikan, denda Rp ' . number_format($denda)
+            'Buku berhasil dikembalikan. Denda Anda: Rp ' . number_format($denda)
         );
     }
-
-
 }

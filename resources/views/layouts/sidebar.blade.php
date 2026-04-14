@@ -75,11 +75,6 @@
                 <i class="fa-solid fa-money-bill-wave text-lg"></i>
                 <span class="font-black text-sm uppercase tracking-wide">Denda</span>
             </a>
-            <a href="{{ route('petugas.pengajuan.index') }}"
-                class="flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('petugas.pengajuan.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-                <i class="fa-solid fa-bell-concierge text-lg"></i>
-                <span class="font-black text-sm uppercase tracking-wide">Pengajuan</span>
-            </a>
         @endif
 
         {{-- MENU KHUSUS ANGGOTA --}}
@@ -99,6 +94,7 @@
                 <i class="fa-solid fa-paper-plane text-lg"></i>
                 <span class="font-black text-sm uppercase tracking-wide">Pengajuan</span>
             </a>
+
             {{-- MENU DENDA ANGGOTA --}}
             <a href="{{ route('anggota.denda.index') }}"
                 class="flex items-center justify-between gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 {{ request()->routeIs('anggota.denda.index') ? 'bg-rose-600 text-white shadow-lg shadow-rose-500/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">

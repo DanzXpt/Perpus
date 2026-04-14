@@ -18,7 +18,7 @@ class DendaController extends Controller
     }
     public function bayar(Request $request, $id)
     {
-        // 1. Ambil data model sebagai OBJEK (Jangan di-update dulu di sini)
+        // 1. Ambil data model sebagai OBJEK 
         $data = Peminjaman::findOrFail($id);
 
         $bayar = $request->bayar;
@@ -32,7 +32,7 @@ class DendaController extends Controller
             return back()->with('error', 'Bayar melebihi sisa denda');
         }
 
-        // 3. Hitung (Sekarang $data->dibayar pasti terbaca karena $data adalah OBJEK)
+        // 3. Hitung Sekarang $data->dibayar
         $totalSudahDibayar = $data->dibayar + $bayar;
         $sisaBaru = $data->sisa_denda - $bayar;
 

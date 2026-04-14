@@ -88,7 +88,7 @@
                                     {{-- Stok --}}
                                     <td class="px-6 py-4">
                                         <span class="px-3 py-1 rounded-xl text-xs font-bold
-                                        {{ $item->stok > 0
+                                                        {{ $item->stok > 0
                         ? 'bg-emerald-100 text-emerald-700'
                         : 'bg-rose-100 text-rose-700' }}">
                                             {{ $item->stok }} Buku

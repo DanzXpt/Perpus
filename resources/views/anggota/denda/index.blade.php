@@ -27,7 +27,8 @@
                                 <td class="p-4">
                                     <div class="font-bold text-slate-800">{{ $item->buku->judul }}</div>
                                     <div class="text-[10px] text-slate-400 font-bold uppercase">Batas:
-                                        {{ \Carbon\Carbon::parse($item->jatuh_tempo)->format('d M Y') }}</div>
+                                        {{ \Carbon\Carbon::parse($item->jatuh_tempo)->format('d M Y') }}
+                                    </div>
                                 </td>
                                 <td class="p-4 text-center font-black text-red-500">
                                     Rp {{ number_format($item->total_denda, 0, ',', '.') }}

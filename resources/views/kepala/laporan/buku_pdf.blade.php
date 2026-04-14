@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <title>Laporan Data Buku</title>
     <style>
-        /* CSS KHUSUS DOMPDF - JANGAN PAKAI TAILWIND DI SINI */
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
             font-size: 12px;

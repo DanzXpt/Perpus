@@ -9,7 +9,7 @@ class Kategori extends Model
 {
     use HasFactory;
 
-    // 1. Tentukan nama tabel secara manual biar nggak bingung nyari 'kategoris' atau 'kategori'
+    // 1. Tentukan nama tabel secara manual biar nggak bingung nyari 'kategoris'
     protected $table = 'kategoris';
 
     // 2. Daftarkan kolom yang boleh diisi
@@ -19,7 +19,6 @@ class Kategori extends Model
 
     /**
      * Relasi: Satu Kategori bisa punya banyak Buku
-     * Penting: Pastikan di tabel 'bukus' kamu punya kolom 'kategori_id'
      */
     public function bukus()
     {

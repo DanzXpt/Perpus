@@ -41,7 +41,6 @@ class LaporanController extends Controller
         return $pdf->stream('laporan-data-akun.pdf');
     }
 
-
     // Halaman dashboard laporan khusus Petugas
     public function indexPetugas()
     {
@@ -56,8 +55,6 @@ class LaporanController extends Controller
         // Ambil SEMUA data tanpa pagination untuk laporan PDF
         $transaksi = Peminjaman::with(['user', 'buku'])->latest()->get();
 
-        // JANGAN diarahkan ke 'petugas.transaksi.index' karena isinya ada Sidebar/Navbar
-        // Buat file baru khusus PDF agar tidak error total()
         $pdf = Pdf::loadView('petugas.transaksi.cetak_pdf', compact('transaksi'));
 
         return $pdf->stream('laporan-transaksi.pdf');

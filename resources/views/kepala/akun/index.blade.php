@@ -54,8 +54,15 @@
                                 <td class="px-6 py-4">
                                     <div class="flex flex-col">
                                         <span class="font-bold text-slate-800 text-sm">{{ $user->name }}</span>
-                                        <span
-                                            class="text-xs text-slate-400 font-medium lowercase italic">{{ $user->email }}</span>
+                                        <span class="text-[11px] text-slate-400 font-medium lowercase italic">{{ $user->email }}</span>
+                                        
+                                        {{-- Penambahan Alamat --}}
+                                        <div class="flex items-start gap-1 mt-1">
+                                            <i class="fas fa-map-marker-alt text-[10px] text-rose-400 mt-0.5"></i>
+                                            <span class="text-[10px] text-slate-500 font-semibold leading-tight line-clamp-1">
+                                                {{ $user->alamat ?? 'Alamat belum diisi' }}
+                                            </span>
+                                        </div>
                                     </div>
                                 </td>
 

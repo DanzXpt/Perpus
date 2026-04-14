@@ -61,15 +61,11 @@
                         <input type="number" name="stok" value="{{ old('stok', $buku->stok) }}" required
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none font-bold text-slate-700">
                     </div>
-                    {{-- Kategori (YANG TADI HILANG) --}}
                     {{-- Ganti bagian select kategori dengan ini --}}
                     <div>
                         <label
                             class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Kategori</label>
                         <select name="kategori_id" required
-                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none font-bold text-slate-700">
-                            {{-- Pastikan nama variabelnya sama dengan yang dikirim Controller (biasanya $kategoris)
-                            --}}
                             @foreach($kategori as $k)
                                 <option value="{{ $k->id }}" {{ $buku->kategori_id == $k->id ? 'selected' : '' }}>
                                     {{ $k->nama_kategori }}
@@ -97,8 +93,6 @@
                     <textarea name="deskripsi" rows="4"
                         class="w-full px-4 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none font-bold">{{ old('deskripsi', $buku->deskripsi) }}</textarea>
                 </div>
-
-
 
 
                 <button type="submit"
